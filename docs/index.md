@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/squareflaw/repostery.svg?branch=master)](https://travis-ci.org/squareflaw/repostery)
 
-Web app that displays data visualizations for github repositories. The fronted client is built with **ReactJS** and the backend API is built with **Django**. Check out the project's [documentation](http://squareflaw.github.io/repostery/).
+Web app that displays data visualizations for github repositories. The fronted client is built with **ReactJS** and the backend API is built with **Django**.
 
 # Prerequisites
 
