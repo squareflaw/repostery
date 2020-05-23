@@ -6,9 +6,8 @@ Web app that displays data visualizations for github repositories. The fronted c
 
 # Prerequisites
 
-[Python](https://www.python.org/downloads/).
-
-[NodeJs](https://www.npmjs.com/package/download).
+⋅⋅* [Python](https://www.python.org/downloads/).
+⋅⋅* [NodeJs](https://nodejs.org/en/download/).
 
 # Local Development
 
