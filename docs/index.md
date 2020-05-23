@@ -1,12 +1,13 @@
-# repostery
+# Repostery
 
 [![Build Status](https://travis-ci.org/squareflaw/repostery.svg?branch=master)](https://travis-ci.org/squareflaw/repostery)
 
-data visualizations for github repositories. Check out the project's [documentation](http://squareflaw.github.io/repostery/).
+Web app that displays data visualizations for github repositories. The fronted client is built with **ReactJS** and the backend API is built with **Django**. Check out the project's [documentation](http://squareflaw.github.io/repostery/).
 
 # Prerequisites
 
 [Python](https://www.python.org/downloads/).
+
 [NodeJs](https://www.npmjs.com/package/download).
 
 # Local Development
