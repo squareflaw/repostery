@@ -9,7 +9,7 @@ Web app that displays data visualizations for github repositories. The fronted c
 - [Python](https://www.python.org/downloads/).
 - [NodeJs](https://nodejs.org/en/download/).
 
-# Local Development
+# Installation
 
 ```bash
 virtualenv .venv
@@ -21,6 +21,12 @@ pip install -r requirements.txt
 python manage.py makemigrations
 
 python manage.py migrate
+
+```
+
+# Local Development
+
+```bash
 
 python manage.py runserver
 
