@@ -1,0 +1,14 @@
+site_name: repostery
+site_description: data visualization for github repositories
+repo_url: https://github.com/squareflaw/repostery
+site_dir: site
+copyright: Copyright &copy; 2020, <a href="https://github.com/squareflaw">squareflaw</a>.
+dev_addr: 0.0.0.0:8001
+
+theme: readthedocs
+
+nav:
+  - Home: 'index.md'
+  - API:
+    - Authentication: 'api/authentication.md'
+    - Users: 'api/users.md'

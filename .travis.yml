@@ -1,0 +1,13 @@
+language: python
+python:
+- '3.6'
+services:
+- postgresql
+cache:
+  pip: true
+install:
+- pip install -r requirements.txt
+script:
+- pytest --flake8
+notifications:
+  email: false
