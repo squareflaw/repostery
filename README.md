@@ -22,6 +22,10 @@ python manage.py makemigrations
 
 python manage.py migrate
 
+cd frontend
+
+npm install
+
 ```
 
 # Local Development
