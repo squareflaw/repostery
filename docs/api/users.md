@@ -8,10 +8,6 @@ You can only retrieve/update the user whose token authenticacion belongs to.
 
 `GET` `/api/v1/user/:username`
 
-Parameters:
-
-- **username**
-
 *Note:*
 
 - **[Authorization Protected](authentication.md)**
@@ -35,10 +31,6 @@ You can only retrieve/update the user whose token authenticacion belongs to.
 **Request**:
 
 `PUT` `/api/v1/user/:username`
-
-Parameters:
-
-- **username**
 
 **Body**
 
@@ -78,10 +70,6 @@ takes care of authentication only. Everything else is done with the profile
 **Request**:
 
 `GET` `/api/v1/profiles/:username`
-
-Parameters:
-
-- **username**
 
 **Response**:
 
