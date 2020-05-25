@@ -29,7 +29,7 @@ Content-Type application/json
 {
     "email": "email@example.com",
     "username": "exampleuser",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OSwiZXhwIjoxNTk1MzcwODQ4LjB9._3sJ-jfAPU3A3Tc2c7uVZ2d-ulavsGkUN5QX3hYs1Lw"
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciO..."
 }
 ```
 
@@ -63,7 +63,32 @@ Content-Type application/json
 {
     "email": "email@example.com",
     "username": "exampleuser",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OSwiZXhwIjoxNTk1MzcxMDE5LjB9.N6PnGrXRwLEmUmeH8k09wRB2zIzKuPAyw1pJIGS2vls"
+    "token": "eyJ0eXAiOiJKV1QiLCJhbG..."
+}
+```
+
+## Sign up with Google or Github
+Once the frontend requires and gets access to the user's social credentials, a 
+request for sign up can be sent with the  `access_token` obtained
+
+**Request**:
+
+`GET` `/api/v1/users/social-signup`
+
+Parameters:
+
+`provider`: it can be `google`(default) or `github`
+`access_token`: token to get user social information in the provider server
+
+**Response**:
+
+```json
+Content-Type application/json
+200 OK
+{
+    "email": "email@example.com",
+    "username": "exampleuser",
+    "token": "eyJ0eXAiOiJKV1QiLC..."
 }
 ```
 

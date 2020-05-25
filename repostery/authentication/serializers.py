@@ -3,6 +3,7 @@ from rest_framework.exceptions import NotFound
 from django.contrib.auth import authenticate
 
 from repostery.profiles.serializers import ProfileSerializer
+from .oauth import OauthTokenConverter
 from .models import User
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -73,6 +74,39 @@ class LoginSerializer(serializers.Serializer):
             'username': user.username,
             'token': user.token,
         }
+
+class SocialSerializer(serializers.Serializer):
+    provider = serializers.CharField(max_length=255, write_only=True)
+    access_token = serializers.CharField(max_length=255, write_only=True)
+    email = serializers.CharField(max_length=255, read_only=True)
+    username = serializers.CharField(max_length=255, read_only=True)
+    token = serializers.CharField(max_length=255, read_only=True)
+
+    def validate(self, data):
+        provider = data.get('provider')
+
+        if provider != 'google' and provider != 'github':
+            raise serializers.ValidationError(
+                'Valid provider required: only google and github allowed'
+            )
+
+        access_token = data.get('access_token')
+
+        if not access_token:
+            raise serializers.ValidationError(
+                'An access token is required to signup.'
+            )
+
+        token_converter = OauthTokenConverter()
+        user_info = token_converter.get_user_social_info(provider, access_token)
+        user = User.objects.get_or_create_user_from_social(user_info)
+
+        return {
+            'email': user.email,
+            'username': user.username,
+            'token': user.token,
+        }
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Handles serialization and deserialization of user objects"""

@@ -4,6 +4,7 @@ from rest_framework import status
 import pytest
 import json
 from .factories import UserFactory
+from ..oauth import OauthTokenConverter
 
 # ------------------------------------------------------------------------------
 # RegistrationViewSet
@@ -67,6 +68,42 @@ def test_login_user_fails(client):
         }
     }
     response = client.post(url, data=data, content_type='application/json')
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+# ------------------------------------------------------------------------------
+# SocialSignupViewSet
+# ------------------------------------------------------------------------------
+
+@pytest.mark.django_db
+def test_google_signup_success(client, mocker):
+    url = reverse('social-signup-list')
+    url += '?provider=google'
+    url += '&access_token=fake_token'
+
+    mock_oauth_response = {
+        'email': 'test@mail.com',
+        'username': 'test_user',
+        'password': 'secretpass',
+        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+    }
+
+    # fake google response to isolate test from network
+    mocker.patch.object(
+        OauthTokenConverter,
+        'get_user_social_info',
+        return_value=mock_oauth_response
+    )
+
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+    assert json.loads(response.content).get('token')
+
+@pytest.mark.django_db
+def test_google_signup_fails(client, mocker):
+    url = reverse('social-signup-list')
+    url += '?provider=google'
+    url += '&access_token=invalid_token'
+    response = client.get(url)
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ------------------------------------------------------------------------------

@@ -2,7 +2,13 @@ from django.contrib.auth.hashers import check_password
 import pytest
 import factory
 from .factories import UserFactory
-from ..serializers import RegistrationSerializer, LoginSerializer, UserSerializer
+from ..serializers import (
+    RegistrationSerializer,
+    LoginSerializer,
+    SocialSerializer,
+    UserSerializer
+)
+from ..oauth import OauthTokenConverter
 from ..models import User
 
 # registration serializer
@@ -49,6 +55,38 @@ def test_LoginSerializer_with_valid_data():
     serializer = LoginSerializer(data=serializer_data)
     assert serializer.is_valid(raise_exception=True)
     assert serializer.data.get('token')
+
+# social serializer
+
+def test_SocialSerializer_with_missing_data():
+    data = {"provider": "google"}
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid() is False
+
+@pytest.mark.django_db
+def test_SocialSerializer_with_valid_data(mocker):
+    data = {
+        'provider': 'google',
+        'access_token': 'fake_token'
+    }
+
+    mock_oauth_response = {
+        'email': 'test@mail.com',
+        'username': 'test_user',
+        'password': 'secretpass',
+        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+    }
+
+    # fake google response to isolate test from network
+    mocker.patch.object(
+        OauthTokenConverter,
+        'get_user_social_info',
+        return_value=mock_oauth_response
+    )
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid()
+    assert serializer.data.get('token')
+
 
 # UserSerializer
 

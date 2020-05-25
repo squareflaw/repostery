@@ -6,6 +6,7 @@ from repostery.core.validators import validateFieldExist
 from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
+    SocialSerializer,
     UserSerializer,
 )
 from .models import User
@@ -30,6 +31,19 @@ class LoginViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def create(self, request):
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SocialSignupViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (AllowAny,)
+    serializer_class = SocialSerializer
+
+    def list(self, request):
+        serializer = self.serializer_class(data={
+            'provider': request.query_params.get('provider', 'google'),
+            'access_token': request.query_params.get('access_token')
+        })
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
