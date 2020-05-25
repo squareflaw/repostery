@@ -34,12 +34,12 @@ class UserManager(BaseUserManager):
 
     def get_or_create_user_from_social(self, user_info):
         try:
-            user = self.model.objects.get(email=user_info['email'])
+            user = self.model.objects.get(username=user_info['username'])
         except self.model.DoesNotExist:
             user = self.create_user(
                 username=user_info['username'],
                 email=user_info['email'],
-                password=user_info['password'],  # we don't really need a password, it's only for user creation
+                password=user_info['password'],   # we don't really need a password, only for user creation
             )
 
         # to keep profile image updated

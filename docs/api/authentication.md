@@ -78,7 +78,12 @@ request for sign up can be sent with the  `access_token` obtained
 Parameters:
 
 `provider`: it can be `google`(default) or `github`
-`access_token`: token to get user social information in the provider server
+
+`access_token`: Required if it's google. Token to get user social information in the provider server
+
+`code`: If it's github you can iether provide a direct `access_token` or provide 
+ a `code` parameter to let the backend obtain the access_token. This is Because of some Github's security-related limitations, we need to 
+perform one extra step to get the access_token.
 
 **Response**:
 

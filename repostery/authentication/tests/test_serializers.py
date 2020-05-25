@@ -58,13 +58,8 @@ def test_LoginSerializer_with_valid_data():
 
 # social serializer
 
-def test_SocialSerializer_with_missing_data():
-    data = {"provider": "google"}
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid() is False
-
 @pytest.mark.django_db
-def test_SocialSerializer_with_valid_data(mocker):
+def test_SocialSerializer_with_valid_data_google_signup(mocker):
     data = {
         'provider': 'google',
         'access_token': 'fake_token'
@@ -87,6 +82,63 @@ def test_SocialSerializer_with_valid_data(mocker):
     assert serializer.is_valid()
     assert serializer.data.get('token')
 
+def test_SocialSerializer_with_missing_data():
+    data = {"wrong": "data"}
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid() is False
+
+@pytest.mark.django_db
+def test_SocialSerializer_with_valid_data_github_signup(mocker):
+    data = {
+        'provider': 'github',
+        'code': 'fake_code'
+    }
+
+    mock_oauth_response = {
+        'email': 'test@mail.com',
+        'username': 'test_user',
+        'password': 'secretpass',
+        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+    }
+
+    # fake google response to isolate test from network
+    mocker.patch.object(
+        OauthTokenConverter,
+        'get_user_social_info',
+        return_value=mock_oauth_response
+    )
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid()
+    assert serializer.data.get('token')
+
+@pytest.mark.django_db
+def test_SocialSerializer_with_valid_data_github_signup_with_access_token(mocker):
+    data = {
+        'provider': 'github',
+        'access_token': 'fake_access_token'
+    }
+
+    mock_oauth_response = {
+        'email': 'test@mail.com',
+        'username': 'test_user',
+        'password': 'secretpass',
+        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+    }
+
+    # fake google response to isolate test from network
+    mocker.patch.object(
+        OauthTokenConverter,
+        'get_user_social_info',
+        return_value=mock_oauth_response
+    )
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid()
+    assert serializer.data.get('token')
+
+def test_SocialSerializer_with_github_missing_token_and_code():
+    data = {"provider": "github"}
+    serializer = SocialSerializer(data=data)
+    assert serializer.is_valid() is False
 
 # UserSerializer
 

@@ -42,7 +42,8 @@ class SocialSignupViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def list(self, request):
         serializer = self.serializer_class(data={
             'provider': request.query_params.get('provider', 'google'),
-            'access_token': request.query_params.get('access_token')
+            'access_token': request.query_params.get('access_token'),
+            'code': request.query_params.get('code'),
         })
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

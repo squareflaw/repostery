@@ -77,28 +77,34 @@ class LoginSerializer(serializers.Serializer):
 
 class SocialSerializer(serializers.Serializer):
     provider = serializers.CharField(max_length=255, write_only=True)
-    access_token = serializers.CharField(max_length=255, write_only=True)
+    access_token = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
+    code = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
     email = serializers.CharField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
         provider = data.get('provider')
+        access_token = data.get('access_token')
+        code = data.get('code')
 
         if provider != 'google' and provider != 'github':
             raise serializers.ValidationError(
                 'Valid provider required: only google and github allowed'
             )
 
-        access_token = data.get('access_token')
-
-        if not access_token:
+        if not access_token and provider == 'google':
             raise serializers.ValidationError(
                 'An access token is required to signup.'
             )
 
+        if not access_token and not code:
+            raise serializers.ValidationError(
+                'An access token or code key is required for Github authentication.'
+            )
+
         token_converter = OauthTokenConverter()
-        user_info = token_converter.get_user_social_info(provider, access_token)
+        user_info = token_converter.get_user_social_info(provider, access_token, code)
         user = User.objects.get_or_create_user_from_social(user_info)
 
         return {

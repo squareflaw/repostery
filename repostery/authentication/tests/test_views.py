@@ -106,6 +106,38 @@ def test_google_signup_fails(client, mocker):
     response = client.get(url)
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
+@pytest.mark.django_db
+def test_github_signup_success(client, mocker):
+    url = reverse('social-signup-list')
+    url += '?provider=github'
+    url += '&code=fake_code'
+
+    mock_oauth_response = {
+        'email': 'test@mail.com',
+        'username': 'test_user',
+        'password': 'secretpass',
+        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+    }
+
+    # fake google response to isolate test from network
+    mocker.patch.object(
+        OauthTokenConverter,
+        'get_user_social_info',
+        return_value=mock_oauth_response
+    )
+
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+    assert json.loads(response.content).get('token')
+
+@pytest.mark.django_db
+def test_github_signup_fails(client, mocker):
+    url = reverse('social-signup-list')
+    url += '?provider=github'
+    url += '&code=invalid_code'
+    response = client.get(url)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
 # ------------------------------------------------------------------------------
 # UserRetrieveUpdateViewSet
 # ------------------------------------------------------------------------------
