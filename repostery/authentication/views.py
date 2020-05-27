@@ -2,7 +2,6 @@ from rest_framework import status, viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from repostery.core.validators import validateFieldExist
 from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
@@ -65,14 +64,6 @@ class UserRetrieveUpdateViewSet(mixins.RetrieveModelMixin,
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
-        FIELDS = (
-            'username',
-            'email',
-            'password',
-            'image',
-        )
-        validateFieldExist(request, 'user', FIELDS)
-
         user_data = request.data.get('user', {})
         profile_data = {
             'image': user_data.pop('image', None)
