@@ -4,8 +4,6 @@ from rest_framework import status
 import pytest
 import json
 
-# RegistrationViewSet
-
 @pytest.mark.django_db
 def test_profile_retrieve_success(client):
     user_data = {

@@ -1,7 +1,12 @@
-from django.contrib.auth.hashers import check_password
 import pytest
-import factory
-from .factories import UserFactory
+
+from django.contrib.auth.backends import ModelBackend
+from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
+from rest_framework.serializers import ValidationError
+from rest_framework.exceptions import NotFound
+
+from repostery.profiles.models import Profile
+from repostery.profiles.tests.factories import ProfileFactory
 from ..serializers import (
     RegistrationSerializer,
     LoginSerializer,
@@ -10,154 +15,168 @@ from ..serializers import (
 )
 from ..oauth import OauthTokenConverter
 from ..models import User
+from .factories import UserFactory
 
-# registration serializer
+class TestRegistrationSerializer:
+    """
+    Test cases for validating user registration
+    """
 
-def test_RegistrationSerializer_with_empty_data():
-    data = {"wrong": "data"}
-    serializer = RegistrationSerializer(data=data)
-    assert serializer.is_valid() is False
+    def test_should_validate_user_data(self):
+        user = UserFactory.build()
+        results = RegistrationSerializer(user).data
+        assert user.username == results['username']
+        assert results['token']
 
-@pytest.mark.django_db
-def test_RegistrationSerializer_with_valid_data():
-    user_data = factory.build(dict, FACTORY_CLASS=UserFactory)
-    serializer = RegistrationSerializer(data=user_data)
-    assert serializer.is_valid()
+    def test_should_raise_error_missing_fields(self):
+        data = {"invalid_field": "invalid_data"}
+        serializer = RegistrationSerializer(data=data)
+        with pytest.raises(ValidationError):
+            serializer.is_valid(raise_exception=True)
 
-@pytest.mark.django_db
-def test_RegistrationSerializer_hashes_password():
-    user_data = factory.build(dict, FACTORY_CLASS=UserFactory)
-    serializer = RegistrationSerializer(data=user_data)
-    serializer.is_valid()
+class TestLoginSerializer:
+    """
+    Test cases for validating user login
+    """
 
-    user = serializer.save()
-    assert check_password(user_data.get('password'), user.password)
+    def test_should_validate_user_login(self, mocker):
+        user = UserFactory.build()
+        serializer = LoginSerializer(data={
+            'email': user.email,
+            'password': user.password,
+        })
+        mocker.patch.object(ModelBackend, 'authenticate', return_value=user)
+        assert serializer.is_valid()
 
-# Login serializer
+    def test_should_raise_error_not_matching_user_password(self, mocker):
+        data = {
+            "email": "test@email.com",
+            "password": "testpassword"
+        }
+        serializer = LoginSerializer(data=data)
+        with pytest.raises(NotFound):
+            mocker.patch.object(ModelBackend, 'authenticate', return_value=None)
+            serializer.is_valid(raise_exception=True)
 
-def test_LoginSerializer_with_empty_data():
-    data = {"wrong": "data"}
-    serializer = LoginSerializer(data=data)
-    assert serializer.is_valid() is False
 
-@pytest.mark.django_db
-def test_LoginSerializer_with_valid_data():
-    user_data = {
-        'username': 'user_name',
-        'email': 'email@email.com',
-        'password': 'secretpass'
-    }
-    User.objects.create_user(**user_data)
-    serializer_data = {
-        'email': user_data['email'],
-        'password': user_data['password']
-    }
-    serializer = LoginSerializer(data=serializer_data)
-    assert serializer.is_valid(raise_exception=True)
-    assert serializer.data.get('token')
+class TestGoogleSocialSerializer:
+    """
+    Test cases for validating google signup with the SocialSerializer
+    """
 
-# social serializer
+    def test_should_validate_cretentials_provided(self, mocker):
+        user = UserFactory.build()
+        data = {'provider': 'google', 'access_token': 'valid_token'}
+        mock_oauth_response = {
+            'email': 'test@mail.com',
+            'username': 'test_user',
+            'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+        }
 
-@pytest.mark.django_db
-def test_SocialSerializer_with_valid_data_google_signup(mocker):
-    data = {
-        'provider': 'google',
-        'access_token': 'fake_token'
-    }
+        mocker.patch.object(
+            OauthTokenConverter,
+            'get_user_social_info',
+            return_value=mock_oauth_response
+        )
 
-    mock_oauth_response = {
-        'email': 'test@mail.com',
-        'username': 'test_user',
-        'password': 'secretpass',
-        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
-    }
+        mocker.patch.object(User.objects, 'get_or_create_user_from_validated_info', return_value=user)
 
-    # fake google response to isolate test from network
-    mocker.patch.object(
-        OauthTokenConverter,
-        'get_user_social_info',
-        return_value=mock_oauth_response
-    )
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid()
-    assert serializer.data.get('token')
+        serializer = SocialSerializer(data=data)
+        assert serializer.is_valid()
 
-def test_SocialSerializer_with_missing_data():
-    data = {"wrong": "data"}
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid() is False
+    def test_should_raise_error_missing_provider(self):
+        data = {"access_token": "valid_token_but_no_provider"}
+        serializer = SocialSerializer(data=data)
+        with pytest.raises(ValidationError):
+            serializer.is_valid(raise_exception=True)
 
-@pytest.mark.django_db
-def test_SocialSerializer_with_valid_data_github_signup(mocker):
-    data = {
-        'provider': 'github',
-        'code': 'fake_code'
-    }
+    def test_should_raise_error_missing_access_token(self):
+        data = {"provider": "google"}
+        serializer = SocialSerializer(data=data)
+        with pytest.raises(ValidationError):
+            serializer.is_valid(raise_exception=True)
 
-    mock_oauth_response = {
-        'email': 'test@mail.com',
-        'username': 'test_user',
-        'password': 'secretpass',
-        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
-    }
 
-    # fake google response to isolate test from network
-    mocker.patch.object(
-        OauthTokenConverter,
-        'get_user_social_info',
-        return_value=mock_oauth_response
-    )
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid()
-    assert serializer.data.get('token')
+class TestGithubSocialSerializer:
+    """
+    Test cases for validating Github signup with the SocialSerializer
+    """
 
-@pytest.mark.django_db
-def test_SocialSerializer_with_valid_data_github_signup_with_access_token(mocker):
-    data = {
-        'provider': 'github',
-        'access_token': 'fake_access_token'
-    }
+    def test_should_validate_cretentials_provided(self, mocker):
+        user = UserFactory.build()
+        data = {'provider': 'github', 'access_token': 'valid_token'}
+        mock_oauth_response = {
+            'email': 'test@mail.com',
+            'username': 'test_user',
+            'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+        }
 
-    mock_oauth_response = {
-        'email': 'test@mail.com',
-        'username': 'test_user',
-        'password': 'secretpass',
-        'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
-    }
+        mocker.patch.object(
+            OauthTokenConverter,
+            'get_user_social_info',
+            return_value=mock_oauth_response
+        )
 
-    # fake google response to isolate test from network
-    mocker.patch.object(
-        OauthTokenConverter,
-        'get_user_social_info',
-        return_value=mock_oauth_response
-    )
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid()
-    assert serializer.data.get('token')
+        mocker.patch.object(User.objects, 'get_or_create_user_from_validated_info', return_value=user)
 
-def test_SocialSerializer_with_github_missing_token_and_code():
-    data = {"provider": "github"}
-    serializer = SocialSerializer(data=data)
-    assert serializer.is_valid() is False
+        serializer = SocialSerializer(data=data)
+        assert serializer.is_valid()
 
-# UserSerializer
+    def test_should_validate_with_code_provided(self, mocker):
+        user = UserFactory.build()
+        data = {'provider': 'github', 'code': 'valid_code'}
+        mock_oauth_response = {
+            'email': 'test@mail.com',
+            'username': 'test_user',
+            'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
+        }
 
-@pytest.mark.django_db
-def test_UserSerializer_updates_password():
-    user_data = {
-        'username': 'user_name',
-        'email': 'email@email.com',
-        'password': 'secretpass'
-    }
-    user = User.objects.create_user(**user_data)
-    new_data = {'password': 'newpassword'}
-    context = {'profile': {'image': None}}
-    serializer = UserSerializer(
-        user,
-        data=new_data,
-        context=context,
-        partial=True
-    )
-    assert serializer.is_valid(raise_exception=True)
-    serializer.save()
-    assert check_password(new_data['password'], User.objects.get(pk=user.pk).password)
+        mocker.patch.object(
+            OauthTokenConverter,
+            'get_user_social_info',
+            return_value=mock_oauth_response
+        )
+
+        mocker.patch.object(User.objects, 'get_or_create_user_from_validated_info', return_value=user)
+
+        serializer = SocialSerializer(data=data)
+        assert serializer.is_valid()
+
+    def test_should_raise_error_missing_provider(self):
+        data = {"access_token": "valid_token_but_no_provider"}
+        serializer = SocialSerializer(data=data)
+        with pytest.raises(ValidationError):
+            serializer.is_valid(raise_exception=True)
+
+    def test_should_raise_error_missing_token_and_code(self):
+        data = {"provider": "github"}
+        serializer = SocialSerializer(data=data)
+        with pytest.raises(ValidationError):
+            serializer.is_valid(raise_exception=True)
+
+
+class TestUserSerializer:
+    """
+    Test cases for updating user with UserSerializer
+    """
+
+    def test_should_update_fields(self, mocker):
+        user = UserFactory.build()
+        profile = ProfileFactory.build()
+        new_data = {'email': 'new_email@mail.com', 'username': 'new_username'}
+
+        mocker.patch.object(User, 'save')  # prevent saving in the db
+        mocker.patch.object(Profile, 'save')
+        mocker.patch.object(ReverseOneToOneDescriptor, '__get__', return_value=profile)
+
+        UserSerializer().update(user, new_data)
+
+        assert new_data['email'] == user.email
+        assert new_data['username'] == user.username
+        assert User.save.called  # assert saving to the db was called
+
+    def test_should_raise_error_unknown_field(self, mocker):
+        user = UserFactory.build()
+        new_data = {'unknown_field': 'value'}
+        with pytest.raises(ValidationError):
+            UserSerializer().update(user, new_data)

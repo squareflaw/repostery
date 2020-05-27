@@ -1,54 +1,64 @@
 import pytest
 import jwt
+
 from django.conf import settings
 from rest_framework.exceptions import AuthenticationFailed
-from .factories import UserFactory
-from ..backends import JWTAuthentication
 
-class MockRequest():
+from ..backends import JWTAuthentication
+from ..models import User
+from .factories import UserFactory
+
+class MockHttpRequest():
+    """
+    Mock class for Django's HttpRequest objects
+    """
     def __init__(self):
         self.META = {}
 
     def set_auth(self, token):
         self.META['HTTP_AUTHORIZATION'] = 'Token ' + token
 
-@pytest.mark.django_db
-def test_should_return_user_info_from_token():
-    user = UserFactory()
-    request = MockRequest()
-    request.set_auth(user.token)
-    (result_user, token) = JWTAuthentication().authenticate(request)
-    assert user.username == result_user.username
 
-@pytest.mark.django_db
-def test_should_return_error_user_is_deactivated():
-    user = UserFactory()
-    user.is_active = False
-    user.save()
-    request = MockRequest()
-    request.set_auth(user.token)
-    with pytest.raises(AuthenticationFailed):
-        (result_user, token) = JWTAuthentication().authenticate(request)
+class TestJWTAuthentication:
+    """
+    Test cases for authenticating a token with our custom jwt authentication system
+    """
 
-@pytest.mark.django_db
-def test_should_fail_unregisterd_token():
-    token = jwt.encode({
-        'id': -1,
-        'exp': 10000000000000
-    }, settings.SECRET_KEY, algorithm='HS256')
-    request = MockRequest()
-    request.set_auth(token.decode('utf-8'))
-    with pytest.raises(AuthenticationFailed):
+    def test_should_return_user_from_token(self, mocker):
+        user = UserFactory.build()
+        request = MockHttpRequest()
+        request.set_auth(user.token)
+        mocker.patch.object(User.objects, 'get', return_value=user)  # prevent hitting the db
         (result_user, token) = JWTAuthentication().authenticate(request)
+        assert user.username == result_user.username
 
-@pytest.mark.django_db
-def test_should_fail_expired_token():
-    user = UserFactory()
-    token = jwt.encode({
-        'id': user.id,
-        'exp': 10
-    }, settings.SECRET_KEY, algorithm='HS256')
-    request = MockRequest()
-    request.set_auth(token.decode('utf-8'))
-    with pytest.raises(AuthenticationFailed):
-        (result_user, token) = JWTAuthentication().authenticate(request)
+    def test_should_return_error_user_is_deactivated(self, mocker):
+        user = UserFactory.build()
+        user.is_active = False
+        request = MockHttpRequest()
+        request.set_auth(user.token)
+        mocker.patch.object(User.objects, 'get', return_value=user)
+        with pytest.raises(AuthenticationFailed):
+            (result_user, token) = JWTAuthentication().authenticate(request)
+
+    def test_should_fail_unregisterd_token(self, mocker):
+        token = jwt.encode({
+            'id': -1,
+            'exp': 10000000000000
+        }, settings.SECRET_KEY, algorithm='HS256')
+        request = MockHttpRequest()
+        request.set_auth(token.decode('utf-8'))
+        mocker.patch.object(User.objects, 'get', side_effect=User.DoesNotExist)
+        with pytest.raises(AuthenticationFailed):
+            (result_user, token) = JWTAuthentication().authenticate(request)
+
+    def test_should_fail_expired_token(self, mocker):
+        user = UserFactory.build()
+        token = jwt.encode({
+            'id': user.id,
+            'exp': 10
+        }, settings.SECRET_KEY, algorithm='HS256')
+        request = MockHttpRequest()
+        request.set_auth(token.decode('utf-8'))
+        with pytest.raises(AuthenticationFailed):
+            (result_user, token) = JWTAuthentication().authenticate(request)

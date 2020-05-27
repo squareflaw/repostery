@@ -6,4 +6,5 @@ class ProfileFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'profiles.Profile'
 
-    user = factory.SubFactory("cookieproject.authentication.tests.factories.UserFactory")
+    id = factory.Sequence(lambda n: n)
+    image = factory.Faker('image_url')
