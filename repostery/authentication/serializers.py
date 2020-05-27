@@ -93,7 +93,7 @@ class SocialSerializer(serializers.Serializer):
     provider = serializers.CharField(max_length=255, write_only=True)
     access_token = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
     code = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
-    email = serializers.CharField(max_length=255, read_only=True)
+    email = serializers.EmailField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
@@ -121,9 +121,14 @@ class SocialSerializer(serializers.Serializer):
         user_info = token_converter.get_user_social_info(provider, access_token, code)
         user = User.objects.get_or_create_user_from_validated_info(user_info)
 
+        if provider == 'google': 
+            username = user.username[:-10]
+        else:
+            username = user.username
+
         return {
             'email': user.email,
-            'username': user.username,
+            'username': username,
             'token': user.token,
         }
 

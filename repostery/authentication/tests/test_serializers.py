@@ -65,11 +65,11 @@ class TestGoogleSocialSerializer:
     """
 
     def test_should_validate_cretentials_provided(self, mocker):
-        user = UserFactory.build()
+        user = UserFactory.build(email='test@gmail.com', username='test@gmail.com')
         data = {'provider': 'google', 'access_token': 'valid_token'}
         mock_oauth_response = {
-            'email': 'test@mail.com',
-            'username': 'test_user',
+            'email': 'test@gmail.com',
+            'username': 'test@gmail.com',
             'image': 'https://lh3.googleusercontent.com/a-/AOh14GhKFe1wz8TsXyJ50Zhr9GOoSd_GBSx4hUeGfnuHuw',
         }
 
@@ -83,6 +83,7 @@ class TestGoogleSocialSerializer:
 
         serializer = SocialSerializer(data=data)
         assert serializer.is_valid()
+        assert serializer.data.get('username') == mock_oauth_response['email'][:-10]
 
     def test_should_raise_error_missing_provider(self):
         data = {"access_token": "valid_token_but_no_provider"}
