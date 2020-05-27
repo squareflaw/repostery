@@ -1,14 +1,16 @@
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
-from django.contrib.auth import authenticate
+from django.contrib.auth.backends import ModelBackend
 
+from repostery.core.validators import validateFieldExist
 from repostery.profiles.serializers import ProfileSerializer
 from .oauth import OauthTokenConverter
 from .models import User
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """Serializers registration request and creates a new user."""
-
+    """
+    performs user data validation and registration of new users.
+    """
     password = serializers.CharField(
         max_length=128,
         min_length=8,
@@ -27,6 +29,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 class LoginSerializer(serializers.Serializer):
+    """
+    Handles user login validation returning the user and
+    raising NotFound if not matching email and password
+    """
     email = serializers.CharField(max_length=255)
     username = serializers.CharField(max_length=255, read_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
@@ -55,7 +61,11 @@ class LoginSerializer(serializers.Serializer):
         # for a user that matches this email/password combination.
         # we pass `email` as the `username` value since in our User
         # model we set `USERNAME_FIELD` as `email`.
-        user = authenticate(username=email, password=password)
+
+        # we use the authenticate method of the ModelBackend class in order to
+        # mock it in tests and avoid hitting the database when unit testing this
+        # serializer. The None value represents the request argument of the method
+        user = ModelBackend().authenticate(None, username=email, password=password)
 
         if user is None:
             raise NotFound(
@@ -76,6 +86,10 @@ class LoginSerializer(serializers.Serializer):
         }
 
 class SocialSerializer(serializers.Serializer):
+    """
+    Handles the validation of provided parameters to perform
+    social authentication with google or github
+    """
     provider = serializers.CharField(max_length=255, write_only=True)
     access_token = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
     code = serializers.CharField(max_length=255, write_only=True, required=False, allow_null=True)
@@ -105,7 +119,7 @@ class SocialSerializer(serializers.Serializer):
 
         token_converter = OauthTokenConverter()
         user_info = token_converter.get_user_social_info(provider, access_token, code)
-        user = User.objects.get_or_create_user_from_social(user_info)
+        user = User.objects.get_or_create_user_from_validated_info(user_info)
 
         return {
             'email': user.email,
@@ -115,7 +129,9 @@ class SocialSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Handles serialization and deserialization of user objects"""
+    """
+    Handles serialization and deserialization of user objects
+    """
     password = serializers.CharField(
         max_length=128,
         min_length=8,
@@ -133,6 +149,15 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('token',)
 
     def update(self, instance, validated_data):
+        # if the client sends a wrong field we want to raise an error and tell exactly which field is wrong
+        FIELDS = (
+            'username',
+            'email',
+            'password',
+            'image',
+        )
+        validateFieldExist(FIELDS, validated_data)
+
         # Passwords should not be handled with `setattr`, unlike other fields.
         # Django provides a function that handles hashing and
         # salting passwords. That means

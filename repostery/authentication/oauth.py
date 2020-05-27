@@ -1,11 +1,11 @@
 import requests
 from decouple import config
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import AuthenticationFailed
 
 class OauthTokenConverter:
     """
     Object for requesting user social information using an access_token,
-    we make it a class instead of a simple function to be able to mock it in tests easier
+    we make it a class to be able to mock it in tests easier
     """
 
     def get_user_social_info(self, provider, access_token, code=None):
@@ -15,16 +15,16 @@ class OauthTokenConverter:
 
     def _get_google_user_info(self, access_token):
         url = f'https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}'
-        google_response = requests.get(url)
+        response = requests.get(url)
 
-        if google_response.status_code >= 400:
-            raise NotFound('access token is invalid or has expired')
+        if response.status_code >= 400:
+            raise AuthenticationFailed('google access token is invalid or has expired')
 
+        data = response.json()
         user_info = {
-            'email': google_response.json()['email'],
-            'username': google_response.json()['email'],
-            'password': google_response.json()['sub'],
-            'image': google_response.json().get('picture'),
+            'email': data['email'],
+            'username': data['email'],
+            'image': data.get('picture'),
         }
         return user_info
 
@@ -37,16 +37,16 @@ class OauthTokenConverter:
             'Authorization': f'bearer {access_token}'
         }
 
-        github_response = requests.get(url, headers=headers)
-        if github_response.status_code >= 400:
-            raise NotFound('access token is invalid or has expired')
+        response = requests.get(url, headers=headers)
+        if response.status_code >= 400:
+            raise AuthenticationFailed('github access token is invalid or has expired')
 
-        email = self._get_email_from_github(github_response)
+        email = self._get_email_from_github(response)
+        data = response.json()
         user_info = {
             'email': email,
-            'username': github_response.json()['login'],
-            'password': github_response.json()['id'],
-            'image': github_response.json().get('avatar_url'),
+            'username': data['login'],
+            'image': data.get('avatar_url'),
         }
         return user_info
 
@@ -61,7 +61,7 @@ class OauthTokenConverter:
         response = requests.post(url, headers={"Accept": "application/json"})
 
         if response.status_code >= 400:
-            raise NotFound('code is invalid or has expired')
+            raise AuthenticationFailed('github code is invalid or has expired')
 
         response = response.json()
         return response.get('access_token')
@@ -74,3 +74,8 @@ class OauthTokenConverter:
         else:
             email = response.json().get('email')
         return email
+
+# if __name__ == '__main__':
+#     oauth = OauthTokenConverter()
+#     info = oauth.get_user_social_info(provider='google', access_token='invalid')
+#     print(info)
