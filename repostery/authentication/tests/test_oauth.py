@@ -1,23 +1,7 @@
-import requests
 import pytest
 from rest_framework.exceptions import AuthenticationFailed
 from ..oauth import OauthTokenConverter
-
-class MockResponse:
-    """
-    Mock object to reproduce the methods used in the token converter
-    """
-
-    def __init__(self, data, error=False):
-        self.data = data
-        self.raise_error = error
-
-    def json(self):
-        return self.data
-
-    def raise_for_status(self):
-        if self.raise_error:
-            raise requests.exceptions.HTTPError
+from .mocks import MockResponse
 
 class TestGoogleTokenConverter:
     """

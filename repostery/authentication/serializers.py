@@ -121,8 +121,8 @@ class SocialSerializer(serializers.Serializer):
         user_info = token_converter.get_user_social_info(provider, access_token, code)
         user = User.objects.get_or_create_user_from_validated_info(user_info)
 
-        if provider == 'google': 
-            username = user.username[:-10]
+        if provider == 'google':
+            username = user.username[:-10]  # because we use the gmail address as username
         else:
             username = user.username
 
