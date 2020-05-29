@@ -111,10 +111,6 @@
 <p>You can only retrieve/update the user whose token authenticacion belongs to.</p>
 <p><strong>Request</strong>:</p>
 <p><code>GET</code> <code>/api/v1/user/:username</code></p>
-<p>Parameters:</p>
-<ul>
-<li><strong>username</strong></li>
-</ul>
 <p><em>Note:</em></p>
 <ul>
 <li><strong><a href="../authentication/">Authorization Protected</a></strong></li>
@@ -134,10 +130,6 @@
 <p>You can only retrieve/update the user whose token authenticacion belongs to.</p>
 <p><strong>Request</strong>:</p>
 <p><code>PUT</code> <code>/api/v1/user/:username</code></p>
-<p>Parameters:</p>
-<ul>
-<li><strong>username</strong></li>
-</ul>
 <p><strong>Body</strong></p>
 <pre><code class="json">{   
     &quot;user&quot;: {
@@ -171,10 +163,6 @@ takes care of authentication only. Everything else is done with the profile
 (user.profile)</p>
 <p><strong>Request</strong>:</p>
 <p><code>GET</code> <code>/api/v1/profiles/:username</code></p>
-<p>Parameters:</p>
-<ul>
-<li><strong>username</strong></li>
-</ul>
 <p><strong>Response</strong>:</p>
 <pre><code class="json">Content-Type application/json
 200 OK

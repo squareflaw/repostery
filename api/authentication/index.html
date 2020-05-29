@@ -59,6 +59,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#login">Login</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sign-up-with-google-or-github">Sign up with Google or Github</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#authenticate-requests">Authenticate requests</a>
     </li>
     </ul>
@@ -127,7 +129,7 @@
 {
     &quot;email&quot;: &quot;email@example.com&quot;,
     &quot;username&quot;: &quot;exampleuser&quot;,
-    &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OSwiZXhwIjoxNTk1MzcwODQ4LjB9._3sJ-jfAPU3A3Tc2c7uVZ2d-ulavsGkUN5QX3hYs1Lw&quot;
+    &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbGciO...&quot;
 }
 </code></pre>
 
@@ -153,7 +155,28 @@ authenticating future requests to the API.</p>
 {
     &quot;email&quot;: &quot;email@example.com&quot;,
     &quot;username&quot;: &quot;exampleuser&quot;,
-    &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OSwiZXhwIjoxNTk1MzcxMDE5LjB9.N6PnGrXRwLEmUmeH8k09wRB2zIzKuPAyw1pJIGS2vls&quot;
+    &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbG...&quot;
+}
+</code></pre>
+
+<h2 id="sign-up-with-google-or-github">Sign up with Google or Github</h2>
+<p>Once the frontend requires and gets access to the user's social credentials, a 
+request for sign up can be sent with the  <code>access_token</code> obtained</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET</code> <code>/api/v1/users/social-signup</code></p>
+<p>Parameters:</p>
+<p><code>provider</code>: it can be <code>google</code>(default) or <code>github</code></p>
+<p><code>access_token</code>: Required if it's google. Token to get user social information in the provider server</p>
+<p><code>code</code>: If it's github you can iether provide a direct <code>access_token</code> or provide 
+ a <code>code</code> parameter to let the backend obtain the access_token. This is Because of some Github's security-related limitations, we need to 
+perform one extra step to get the access_token.</p>
+<p><strong>Response</strong>:</p>
+<pre><code class="json">Content-Type application/json
+200 OK
+{
+    &quot;email&quot;: &quot;email@example.com&quot;,
+    &quot;username&quot;: &quot;exampleuser&quot;,
+    &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLC...&quot;
 }
 </code></pre>
 
