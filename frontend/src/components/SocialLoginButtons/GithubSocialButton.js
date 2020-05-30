@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
-import { requestGithubAuthentication } from "../helpers/oauth";
+import { requestGithubAuthentication } from "../../helpers/oauth";
 import { Button } from 'antd';
-import { GithubOutlined } from '@ant-design/icons';
 
 const GithubSocialButton = (props) => {
 
@@ -16,7 +15,8 @@ const GithubSocialButton = (props) => {
   }, [])
 
   return (
-    <Button icon={<GithubOutlined />} onClick={requestGithubAuthentication}>
+    <Button onClick={requestGithubAuthentication}>
+      <img className='logo' src='github.png' alt='github logo' />
       Sign up with Github
     </Button>
   );

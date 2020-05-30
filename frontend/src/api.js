@@ -1,4 +1,6 @@
-const API_ROOT = 'http://localhost:8000/api/v1'
+import {isLocalhost} from './serviceWorker'
+
+const API_ROOT = isLocalhost ? 'http://localhost:8000/api/v1' : 'https://repostery.herokuapp.com/api/v1'
 let token = null;
 
 const requests = {

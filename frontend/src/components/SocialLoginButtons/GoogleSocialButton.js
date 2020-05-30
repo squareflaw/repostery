@@ -1,13 +1,13 @@
 import React from 'react';
 import GoogleLogin from 'react-google-login';
 import { Button } from 'antd';
-import { GoogleOutlined} from '@ant-design/icons';
 
 const RenderButton = (renderProps) => (
-  <Button icon={<GoogleOutlined />}
+  <Button
     onClick={renderProps.onClick} 
     disabled={renderProps.disabled}
   >
+    <img className='logo' src='google.png' alt='google logo'/>
     Sign up with Google
   </Button>
 )

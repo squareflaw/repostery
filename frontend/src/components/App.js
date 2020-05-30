@@ -2,21 +2,20 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import { Button } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
-import GithubSocialButton from './GithubSocialButton'
-import GoogleSocialButton from './GoogleSocialButton'
+import SoialLoginButtons from "./SocialLoginButtons/SocialLoginButtons";
 import api from '../api'
 
 const MainDiv = styled.div`
   min-height: ${window.innerHeight}px;
+  margin: 0 20px;
   display: flex;
   flex-direction: column;
   justify-content:center;
   align-items: center;
+`;
 
-  > button {
-    margin: 10px;
-    height: 50px;
-  }
+const Paragraph = styled.p`
+  max-width: 730px;
 `;
 
 const App = () => {
@@ -35,51 +34,34 @@ const App = () => {
       setError(data.error);
     } else {
       window.localStorage.setItem('jwt', data.token);
-      setUser({
-        username: data.username,
-        token: data.token
-      });
+      setUser({username: data.username, token: data.token });
     }
   }
   
   const handleLogout = () => {
-    api.setToken('');
+    api.setToken(null);
     window.localStorage.setItem('jwt', '');
-    setUser({
-      username: '',
-      token: ''
-    });
+    setUser({username: '', token: ''});
   }
-
-  const Landing = () => (
-    <React.Fragment>
-      {error ? <h2>{error}</h2> : null}
-      <GithubSocialButton login={code => handleLogin('github', code)} />
-      <GoogleSocialButton login={access_token => handleLogin('google', access_token)} />
-    </React.Fragment>
-  )
 
   const UserView = () => (
     <React.Fragment>
-      {user.username ? <h2>Username: {user.username}</h2> : null}
-      {inProgress ? 
-        <h3>loading...</h3> 
-      : 
-        <Button icon={<LogoutOutlined />} onClick={handleLogout}>Log out</Button>
-      }
+      {user.username && <h2>Username: {user.username}</h2>}
+      {inProgress && <h3>loading...</h3> }
+      {!inProgress && <Button icon={<LogoutOutlined/>} onClick={handleLogout}>Log out</Button>}
     </React.Fragment>
   )
 
   return (
     <MainDiv>
-    {user.username || inProgress? 
-      <UserView/> 
-    : 
-      <Landing/> 
+    {user.username || inProgress
+      ? <UserView/> 
+      : <SoialLoginButtons handleLogin={handleLogin} />
     }
+    <h2>Long Ass Title</h2>
+    <Paragraph>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Paragraph>
     </MainDiv>
   );
 }
-
 
 export default App;
