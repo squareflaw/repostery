@@ -37,7 +37,7 @@ export const Home = () => {
 
   return (
     <MainDiv>
-      <Avatar src={user.image}/>
+      <Avatar src={user.profile.image}/>
       <h2>{user.username}</h2>
       <Button icon={<LogoutOutlined />} onClick={handleLogout}>Log out</Button>
     </MainDiv>

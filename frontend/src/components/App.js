@@ -6,6 +6,7 @@ import Home from "./Home";
 import api from '../api'
 
 const Spinner = styled(Spin)`
+  min-height: ${window.innerHeight}px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,13 +18,15 @@ const App = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    async function getUser () {
-      const token = window.localStorage.getItem('jwt');
-      if (!token) return;
+    const token = window.localStorage.getItem('jwt');
+    if (!token) return;
+    api.setToken(token);
+    setLoading(true);
 
-      api.setToken(token);
-      setLoading(true);
+    async function getUser () {
       let data = await api.user.getUser();
+      let profile = await api.user.getProfile(data.username);
+      data.profile = profile;
       setLoading(false);
   
       if (data.error) {
