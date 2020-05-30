@@ -1,35 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { requestGithubAuthentication } from "../helpers/oauth";
+import { Button } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
 
-class GithubSocialButton extends React.Component {
-  state = {
-    loggedIn: false
-  }
+const GithubSocialButton = (props) => {
 
-  triggerLogin = () => {
-    if(this.state.loggedIn) return;
-    const client_id = 'eb01be873c47acc78a04';
-    const redirect_uri = 'http://localhost:3000/';
-    let url = `https://github.com/login/oauth/authorize?client_id=${client_id}`;
-    url += `&redirect_uri=${redirect_uri}`;
-    url += `&scope=user:email`;
-    window.location.href = url;
-  }
-
-  componentDidMount(){
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code')
-    console.log(code)
-  }
+    if (code) {
+      const cleanURL = window.location.href.split("?")[0];
+      window.history.pushState('object', document.title, cleanURL);
+      props.login(code)
+    }
+  }, [])
 
-  render() {
-    return (
-      <button onClick={this.triggerLogin}>
-        Sign up with Github
-      </button>
-    );
-  }
+  return (
+    <Button icon={<GithubOutlined />} onClick={requestGithubAuthentication}>
+      Sign up with Github
+    </Button>
+  );
 }
-
-
 
 export default GithubSocialButton;

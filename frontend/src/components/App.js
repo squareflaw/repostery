@@ -1,25 +1,85 @@
-import React from 'react';
-import { GoogleLogin } from 'react-google-login';
+import React, {useState} from 'react';
+import styled from "styled-components";
+import { Button } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
 import GithubSocialButton from './GithubSocialButton'
+import GoogleSocialButton from './GoogleSocialButton'
+import api from '../api'
+
+const MainDiv = styled.div`
+  min-height: ${window.innerHeight}px;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+
+  > button {
+    margin: 10px;
+    height: 50px;
+  }
+`;
 
 const App = () => {
-
-  const handleResponse = (response) => {
-    console.log(response)
+  const [inProgress, setInProgress] = useState(false);
+  const [error, setError] = useState('');
+  const [user, setUser] = useState({
+    username:'', 
+    loading: false
+  });
+  
+  const handleLogin = async (provider, key) => {
+    setInProgress(true);
+    const data = await api.auth.socialLogin(provider, key)
+    setInProgress(false);
+    if (data.error) {
+      setError(data.error);
+    } else {
+      window.localStorage.setItem('jwt', data.token);
+      setUser({
+        username: data.username,
+        token: data.token
+      });
+    }
+  }
+  
+  const handleLogout = () => {
+    api.setToken('');
+    window.localStorage.setItem('jwt', '');
+    setUser({
+      username: '',
+      token: ''
+    });
   }
 
+  const Landing = () => (
+    <React.Fragment>
+      {error ? <h2>{error}</h2> : null}
+      <GithubSocialButton login={code => handleLogin('github', code)} />
+      <GoogleSocialButton login={access_token => handleLogin('google', access_token)} />
+    </React.Fragment>
+  )
+
+  const UserView = () => (
+    <React.Fragment>
+      {user.username ? <h2>Username: {user.username}</h2> : null}
+      {inProgress ? 
+        <h3>loading...</h3> 
+      : 
+        <Button icon={<LogoutOutlined />} onClick={handleLogout}>Log out</Button>
+      }
+    </React.Fragment>
+  )
+
   return (
-    <div className="App">
-      <GoogleLogin
-        clientId="905952200671-5m0b8f3ku2h032mo0dpfsfnidt2ocnr7.apps.googleusercontent.com"
-        buttonText="Google Signup"
-        onSuccess={handleResponse}
-        onFailure={handleResponse}
-        cookiePolicy={'single_host_origin'}
-      />
-        <GithubSocialButton/>
-    </div>
+    <MainDiv>
+    {user.username || inProgress? 
+      <UserView/> 
+    : 
+      <Landing/> 
+    }
+    </MainDiv>
   );
 }
+
 
 export default App;
