@@ -2,12 +2,12 @@ html {
     --primary-font: 'Geneva', 'Helvetica', 'Helvetica Neue', sans-serif;
     --secundary-font: 'Roboto', sans-serif;
 
-    --primary-color: #205080;
-    --primary-light-color: #0073e5;
-    --primary-dark-color: #13304d;
+    --primary-color: #1F8D7A;
+    --primary-light-color: #21C079;
+    --primary-dark-color: #416F6A;
 
-    --secundary-color: #208080;
-    --secundary-light-color: #00cccc;
+    --secundary-color: #7E2632;
+    --secundary-light-color: #E58759;
 
     --vibrant-red: #bf133e;
 
@@ -18,6 +18,7 @@ html {
     --white: hsl(0,0%,90%);
     --semi-white: hsl(0,0%,75%);
     --gray: hsl(0,0%,50%);
+    font-size: 20px;
 }
 
 
@@ -28,8 +29,14 @@ html {
 }
 
 body {
-    font-family: var(--secundary-font);
     color: var(--black);
+    font-family: var(--secundary-font);
+    font-size: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--primary-font);
+    font-size: calc(1rem + 1vw);
 }
 
 li {
