@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {setGlobal} from 'reactn';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.min.css';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+
+setGlobal({
+  user: null,
+  responseError: null
+})
 
 ReactDOM.render(<App />,
   document.getElementById('root')
