@@ -1,4 +1,6 @@
 from django.contrib.auth.models import BaseUserManager
+from django.db.utils import IntegrityError
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class UserManager(BaseUserManager):
@@ -36,10 +38,13 @@ class UserManager(BaseUserManager):
         try:
             user = self.model.objects.get(username=user_info['username'])
         except self.model.DoesNotExist:
-            user = self.create_user(
-                username=user_info['username'],
-                email=user_info['email'],
-            )
+            try:
+                user = self.create_user(
+                    username=user_info['username'],
+                    email=user_info['email'],
+                )
+            except IntegrityError:
+                raise AuthenticationFailed('email already registered with another account')
 
         # to keep profile image updated
         if user.profile.image != user_info.get('image'):
