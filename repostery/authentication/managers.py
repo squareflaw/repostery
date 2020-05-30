@@ -49,6 +49,6 @@ class UserManager(BaseUserManager):
         # to keep profile image updated
         if user.profile.image != user_info.get('image'):
             user.profile.image = user_info.get('image')
-            user.save()
+            user.profile.save()
 
         return user

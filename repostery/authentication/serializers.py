@@ -96,6 +96,7 @@ class SocialSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
+    image = serializers.URLField(max_length=255, read_only=True)
 
     def validate(self, data):
         provider = data.get('provider')
@@ -130,6 +131,7 @@ class SocialSerializer(serializers.Serializer):
             'email': user.email,
             'username': username,
             'token': user.token,
+            'image': user.profile.image
         }
 
 
@@ -146,7 +148,7 @@ class UserSerializer(serializers.ModelSerializer):
     # so. Moreover, `UserSerializer` should never expose profile information,
     # so we set `write_only=True`.
     profile = ProfileSerializer(write_only=True)
-    image = serializers.CharField(source='profile.image')
+    image = serializers.URLField(source='profile.image')
 
     class Meta:
         model = User
