@@ -15,6 +15,8 @@ const Spinner = styled(Spin)`
 const App = () => {
   const [user, setUser] = useGlobal('user');
   const [error, setError] = useGlobal('responseError')
+  const [height, setHeight] = useGlobal('height')
+  const [width, setWidth] = useGlobal('width');
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -37,6 +39,15 @@ const App = () => {
     }
     getUser();
   }, []);
+
+  const updateWidthAndHeight = () => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateWidthAndHeight);
+    return () => window.removeEventListener("resize", updateWidthAndHeight);
+  });
 
   if (loading) return <Spinner size="large" />
   if (user) return <Home/>

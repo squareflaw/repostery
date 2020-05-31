@@ -7,7 +7,9 @@ import * as serviceWorker from './serviceWorker';
 
 setGlobal({
   user: null,
-  responseError: null
+  responseError: null,
+  height: window.innerHeight,
+  width: window.innerWidth
 })
 
 ReactDOM.render(<App />,
