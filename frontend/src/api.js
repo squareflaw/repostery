@@ -1,6 +1,7 @@
 import {isLocalhost} from './serviceWorker'
 
 const API_ROOT = isLocalhost ? 'http://localhost:8000/api/v1' : 'https://repostery.herokuapp.com/api/v1'
+const NETWORK_ERROR = 'Network Error: Connection with server is unavailable, Try again later';
 let token = null;
 
 const options = (method='GET', data={}) => ({
@@ -13,26 +14,51 @@ const options = (method='GET', data={}) => ({
     'Authorization': token? `Token ${token}`: ''
   },
   referrerPolicy: 'no-referrer', 
-  body: method !== 'GET'? JSON.stringify(data) : null
+  body: method === 'GET' ? null : JSON.stringify(data)
 })
 
 const requests = {
   get: async (url) => {
-    const response = await fetch(`${API_ROOT}${url}`, options());
-    return await handleResponse(response);
+    try {
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options());
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: NETWORK_ERROR}
+    }
   },
   post: async (url, data) => {
-    const response = await fetch(`${API_ROOT}${url}`, options('POST', data))
-    return await handleResponse(response);
+    try {
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('POST', data))
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: NETWORK_ERROR }
+    }
   },
   put: async (url, data) => {
-    const response = await fetch(`${API_ROOT}${url}`, options('PUT', data))
-    return await handleResponse(response);
+    try {
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('PUT', data))
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: NETWORK_ERROR}
+    }
   },
   delete: async (url) => {
-    const response = await fetch(`${API_ROOT}${url}`, options('DELETE'))
-    return await handleResponse(response);
+    try {
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('DELETE'))
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: NETWORK_ERROR }
+    }
   }
+}
+
+const fetchWithTimeout = (url, options, timeout = 15000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), timeout)
+    )
+  ]);
 }
 
 const handleResponse = async (response) => {
