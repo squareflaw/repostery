@@ -30,14 +30,22 @@ const MainDiv = styled.div`
   }
 `;
 
+const ErrorText = styled.p`
+  max-width: 600px;
+  text-align: center;
+`;
+
 const SocialLogin = () => {
   const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useGlobal('responseError');
   const [user, setUser] = useGlobal('user');
 
   const handleLogin = async (provider, key) => {
+    setError(null);
     setInProgress(true);
-    const data = await api.auth.socialLogin(provider, key)
+    let data = await api.auth.socialLogin(provider, key)
+    let profile = await api.user.getProfile(data.username);
+    data.profile = profile;
     setInProgress(false);
     
     if (data.error) {
@@ -56,6 +64,7 @@ const SocialLogin = () => {
       {inProgress ? <Spin size="large" />
       :
         <React.Fragment>
+          {error && <ErrorText>{error}</ErrorText>}
           <GithubSocialButton login={handleGithubLogin}/>
           <GoogleSocialButton login={handleGoogleLogin}/>
         </React.Fragment>
