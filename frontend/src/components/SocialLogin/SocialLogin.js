@@ -1,6 +1,6 @@
 import React, { useState, useGlobal } from 'reactn';
 import styled from "styled-components";
-import { Spin} from 'antd';
+import { Spin, message} from 'antd';
 import GithubSocialButton from './GithubSocialButton'
 import GoogleSocialButton from './GoogleSocialButton'
 import api from '../../api'
@@ -64,7 +64,7 @@ const SocialLogin = () => {
       {inProgress ? <Spin size="large" />
       :
         <React.Fragment>
-          {error && <ErrorText>{error}</ErrorText>}
+          {error && message.error(error, 10)}
           <GithubSocialButton login={handleGithubLogin}/>
           <GoogleSocialButton login={handleGoogleLogin}/>
         </React.Fragment>
