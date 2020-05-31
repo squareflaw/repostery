@@ -3,8 +3,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 import pytest
 import json
-from .factories import UserFactory
 from ..oauth import OauthTokenConverter
+from .factories import UserFactory
+from .mocks import MockResponse
 
 class TestRegistrationViewSet:
     """
@@ -107,6 +108,9 @@ class TestGoogleSocialRegistration:
         url = reverse('social-signup-list')
         url += '?provider=google'
         url += '&access_token=invalid_token'
+
+        mock_response = MockResponse(None, error=True)  # raises HTTPError
+        mocker.patch('requests.get', return_value=mock_response)
         response = client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -143,6 +147,8 @@ class TestGithubSocialRegistration:
         url = reverse('social-signup-list')
         url += '?provider=github'
         url += '&code=invalid_code'
+        mock_response = MockResponse(None, error=True)  # raises HTTPError
+        mocker.patch('requests.get', return_value=mock_response)
         response = client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 

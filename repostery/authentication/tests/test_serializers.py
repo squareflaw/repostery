@@ -83,7 +83,6 @@ class TestGoogleSocialSerializer:
 
         serializer = SocialSerializer(data=data)
         assert serializer.is_valid()
-        assert serializer.data.get('username') == mock_oauth_response['email'][:-10]
 
     def test_should_raise_error_missing_provider(self):
         data = {"access_token": "valid_token_but_no_provider"}

@@ -24,7 +24,7 @@ class OauthTokenConverter:
         data = response.json()
         user_info = {
             'email': data.get('email'),
-            'username': data.get('email'),
+            'username': f'{data.get("email")[:-10]}-g',
             'image': data.get('picture'),
         }
         return user_info
