@@ -12,7 +12,7 @@ const GithubSocialButton = (props) => {
       window.history.pushState('object', document.title, cleanURL);
       props.login(code)
     }
-  }, [])
+  }, [props])
 
   return (
     <Button onClick={requestGithubAuthentication}>

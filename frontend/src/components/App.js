@@ -35,7 +35,7 @@ const App = () => {
       setUser({ ...data });
     }
     getUser();
-  }, []);
+  }, [setUser]);
 
   const updateWidthAndHeight = () => {
     setWidth(window.innerWidth);
