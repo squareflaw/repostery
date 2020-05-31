@@ -1,7 +1,7 @@
 import {isLocalhost} from './serviceWorker'
 
 const API_ROOT = isLocalhost ? 'http://localhost:8000/api/v1' : 'https://repostery.herokuapp.com/api/v1'
-const NETWORK_ERROR = 'Network Error: Connection with server is unavailable, Try again later';
+const NETWORK_ERROR = 'Connection with server is unavailable, Try again later';
 let token = null;
 
 const options = (method='GET', data={}) => ({
@@ -21,7 +21,7 @@ const requests = {
   get: async (url) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options());
-      return await handleResponse(response);
+      return handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR}
     }
@@ -29,7 +29,7 @@ const requests = {
   post: async (url, data) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('POST', data))
-      return await handleResponse(response);
+      return handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR }
     }
@@ -37,7 +37,7 @@ const requests = {
   put: async (url, data) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('PUT', data))
-      return await handleResponse(response);
+      return handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR}
     }
@@ -45,7 +45,7 @@ const requests = {
   delete: async (url) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('DELETE'))
-      return await handleResponse(response);
+      return handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR }
     }
@@ -61,8 +61,8 @@ const fetchWithTimeout = (url, options, timeout = 15000) => {
   ]);
 }
 
-const handleResponse = async (response) => {
-  const data = await response.json();
+const handleResponse = (response) => {
+  const data = response.json();
   if (response.status >= 200 && response.status <= 299) {
     return data
   } else {
