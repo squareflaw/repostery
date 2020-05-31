@@ -21,7 +21,7 @@ const requests = {
   get: async (url) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options());
-      return handleResponse(response);
+      return await handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR}
     }
@@ -29,7 +29,7 @@ const requests = {
   post: async (url, data) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('POST', data))
-      return handleResponse(response);
+      return await handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR }
     }
@@ -37,7 +37,7 @@ const requests = {
   put: async (url, data) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('PUT', data))
-      return handleResponse(response);
+      return await handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR}
     }
@@ -45,7 +45,7 @@ const requests = {
   delete: async (url) => {
     try {
       const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('DELETE'))
-      return handleResponse(response);
+      return await handleResponse(response);
     } catch (error) {
       return { error: NETWORK_ERROR }
     }
@@ -61,8 +61,8 @@ const fetchWithTimeout = (url, options, timeout = 15000) => {
   ]);
 }
 
-const handleResponse = (response) => {
-  const data = response.json();
+const handleResponse = async (response) => {
+  const data = await response.json();
   if (response.status >= 200 && response.status <= 299) {
     return data
   } else {
