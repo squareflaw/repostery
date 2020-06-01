@@ -1,4 +1,4 @@
-import React, {useGlobal} from 'reactn'
+import React from 'reactn'
 import styled from 'styled-components'
 import NavUserBox from './NavUserBox'
 import SearchBox from './SearchBox'
@@ -15,7 +15,7 @@ const Logo = styled.img`
   height: 40px;
 `
 
-const Nav = ({user, logout}) => {
+const Nav = () => {
   return (
     <MainDiv>
       <Logo src='pie-logo.svg' alt='App logo'/>

@@ -30,11 +30,6 @@ const MainDiv = styled.div`
   }
 `;
 
-const ErrorText = styled.p`
-  max-width: 600px;
-  text-align: center;
-`;
-
 const SocialLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useGlobal('responseError');

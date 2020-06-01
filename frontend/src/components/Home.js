@@ -1,4 +1,4 @@
-import React, { useGlobal} from 'reactn';
+import React from 'reactn';
 import Nav from "./Nav/Nav";
 import Tabs from './Tabs'
 

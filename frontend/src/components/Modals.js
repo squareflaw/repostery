@@ -1,5 +1,5 @@
 import React from "reactn";
-import { Modal, Button, Space } from 'antd';
+import { Modal} from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;

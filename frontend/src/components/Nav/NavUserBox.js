@@ -1,6 +1,6 @@
 import React, { useGlobal } from 'reactn'
 import styled from 'styled-components'
-import { Popover, Menu, message, Dropdown, Button as btn } from 'antd'
+import { Popover, Menu, Dropdown, Button as btn } from 'antd'
 import { LogoutOutlined } from '@ant-design/icons'
 import { showLogoutConfirm } from "../Modals"
 import api from '../../api'
