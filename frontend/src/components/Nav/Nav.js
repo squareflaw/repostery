@@ -1,7 +1,7 @@
 import React from 'reactn'
 import styled from 'styled-components'
 import NavUserBox from './NavUserBox'
-import SearchBox from './SearchBox'
+import AutocompleteSearch from './AutocompleteSearch'
 
 const MainDiv = styled.div`
   padding: 20px;
@@ -19,7 +19,7 @@ const Nav = () => {
   return (
     <MainDiv>
       <Logo src='pie-logo.svg' alt='App logo'/>
-      <SearchBox placeholder='Search Github user'/>
+      <AutocompleteSearch/>
       <NavUserBox/>
     </MainDiv>
   )

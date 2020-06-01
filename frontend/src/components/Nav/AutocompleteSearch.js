@@ -1,7 +1,7 @@
 import React, { useState, useGlobal } from 'reactn';
 import styled from 'styled-components'
-import { Input, AutoComplete as AutoComp } from 'antd';
-import {getUsernameSuggestions} from '../helpers/githubAPI'
+import { Input, AutoComplete } from 'antd';
+import {getUsernameSuggestions} from '../../helpers/githubAPI'
 
 const SearchBoxStyled = styled(Input.Search)`
   max-width: 800px;
@@ -16,7 +16,7 @@ const mockVal = (str, repeat = 1) => ({
   value: str.repeat(repeat),
 });
 
-const AutoComplete = () => {
+const AutocompleteSearch = () => {
   const [searchInput, setSearchInput] = useGlobal('searchInput')
   const [options, setOptions] = useState([]);
 
@@ -32,7 +32,7 @@ const AutoComplete = () => {
   };
 
   return (
-    <AutoComp
+    <AutoComplete
       options={options}
       style={{
         width: 600,
@@ -41,8 +41,8 @@ const AutoComplete = () => {
       onSearch={onSearch}
     >
       <SearchBoxStyled size="large" placeholder="Search Github user" enterButton />
-    </AutoComp>
+    </AutoComplete>
   );
 };
 
-export default AutoComplete;
+export default AutocompleteSearch;
