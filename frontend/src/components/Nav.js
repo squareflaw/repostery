@@ -34,7 +34,9 @@ const Nav = ({user, logout}) => {
   const menu = () => (
     <Menu>
       <Menu.ItemGroup title={user.username}>
-        <Menu.Item key="1" onClick={() => showLogoutConfirm(logout)}>Log out</Menu.Item>
+        <Menu.Item key="1" onClick={() => showLogoutConfirm(logout)} icon={<LogoutOutlined/>}>
+          Log out
+        </Menu.Item>
       </Menu.ItemGroup>
     </Menu>
   );
@@ -47,18 +49,18 @@ const Nav = ({user, logout}) => {
         </Dropdown>
       </MainDiv>
     )
+  } else {
+    return (
+      <MainDiv>
+        <Popover placement="bottomRight" content={user.username}>
+          <Avatar src={user.profile.image} />
+        </Popover>
+        <Popover placement="bottomRight" content='Log out'>
+          <Button onClick={() => showLogoutConfirm(logout)}><LogoutOutlined /></Button>
+        </Popover>
+      </MainDiv>
+    )
   }
-
-  return (
-    <MainDiv>
-      <Popover placement="bottomRight" content={user.username}>
-        <Avatar src={user.profile.image} />
-      </Popover>
-      <Popover placement="bottomRight" content='Log out'>
-        <Button onClick={() => showLogoutConfirm(logout)}><LogoutOutlined /></Button>
-      </Popover>
-    </MainDiv>
-  )
 };
 
 export default Nav;
