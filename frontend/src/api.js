@@ -18,40 +18,36 @@ const options = (method='GET', data={}) => ({
 })
 
 export const requests = {
-  get: async (url, external=false) => {
+  get: async (url) => {
     try {
-      const finalUrl = external? url : API_ROOT + url;
-      const response = await fetchWithTimeout(finalUrl, options());
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options());
       return await handleResponse(response);
     } catch (error) {
       console.error(error)
       return { error: NETWORK_ERROR}
-    } 
+    }
   },
-  post: async (url, data, external=false) => {
+  post: async (url, data) => {
     try {
-      const finalUrl = external? url : API_ROOT + url;
-      const response = await fetchWithTimeout(finalUrl, options('POST', data))
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('POST', data))
       return await handleResponse(response);
     } catch (error) {
       console.error(error)
       return { error: NETWORK_ERROR }
     }
   },
-  put: async (url, data, external=false) => {
+  put: async (url, data) => {
     try {
-      const finalUrl = external? url : API_ROOT + url;
-      const response = await fetchWithTimeout(finalUrl, options('PUT', data))
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('PUT', data))
       return await handleResponse(response);
     } catch (error) {
       console.error(error)
       return { error: NETWORK_ERROR}
     }
   },
-  delete: async (url, external=false) => {
+  delete: async (url) => {
     try {
-      const finalUrl = external? url : API_ROOT + url;
-      const response = await fetchWithTimeout(finalUrl, options('DELETE'))
+      const response = await fetchWithTimeout(`${API_ROOT}${url}`, options('DELETE'))
       return await handleResponse(response);
     } catch (error) {
       console.error(error)
