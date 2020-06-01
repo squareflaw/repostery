@@ -1,25 +1,25 @@
-import React, {useGlobal} from 'reactn'
+import React, { useGlobal } from 'reactn'
 import styled from 'styled-components'
-import { Popover, Menu, message, Dropdown, Button as btn } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
-import { showLogoutConfirm } from "./Modals";
+import { Popover, Menu, message, Dropdown, Button as btn } from 'antd'
+import { LogoutOutlined } from '@ant-design/icons'
+import { showLogoutConfirm } from "../Modals"
+import api from '../../api'
 
 const MainDiv = styled.div`
-  padding: 20px;
   display: flex;
-  justify-content: right;
+  justify-content: center;
   align-items: center;
 `;
 
 const Avatar = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
-`;
+`
 
 const Button = styled(btn)`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   margin-left: 20px;
   border-radius: 10px;
   &:hover {
@@ -28,13 +28,20 @@ const Button = styled(btn)`
   }
 `;
 
-const Nav = ({user, logout}) => {
+const NavUserBox = () => {
   const [width] = useGlobal('width')
+  const [user, setUser] = useGlobal('user');
+
+  const handleLogout = () => {
+    api.setToken(null);
+    window.localStorage.setItem('jwt', '');
+    setUser(null);
+  }
 
   const menu = () => (
     <Menu>
       <Menu.ItemGroup title={user.username}>
-        <Menu.Item key="1" onClick={() => showLogoutConfirm(logout)} icon={<LogoutOutlined/>}>
+        <Menu.Item key="1" onClick={() => showLogoutConfirm(handleLogout)} icon={<LogoutOutlined />}>
           Log out
         </Menu.Item>
       </Menu.ItemGroup>
@@ -45,7 +52,7 @@ const Nav = ({user, logout}) => {
     return (
       <MainDiv>
         <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-          <Avatar src={user.profile.image} />
+          <Avatar src={user.profile.image} wWidth={width} />
         </Dropdown>
       </MainDiv>
     )
@@ -53,14 +60,16 @@ const Nav = ({user, logout}) => {
     return (
       <MainDiv>
         <Popover placement="bottomRight" content={user.username}>
-          <Avatar src={user.profile.image} />
+          <Avatar src={user.profile.image} wWidth={width} />
         </Popover>
         <Popover placement="bottomRight" content='Log out'>
-          <Button onClick={() => showLogoutConfirm(logout)}><LogoutOutlined /></Button>
+          <Button onClick={() => showLogoutConfirm(handleLogout)}>
+            <LogoutOutlined />
+          </Button>
         </Popover>
       </MainDiv>
     )
   }
 };
 
-export default Nav;
+export default NavUserBox;
