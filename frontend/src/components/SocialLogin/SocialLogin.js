@@ -36,15 +36,15 @@ const ErrorText = styled.p`
 `;
 
 const SocialLogin = () => {
-  const [inProgress, setInProgress] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useGlobal('responseError');
   const [user, setUser] = useGlobal('user');
 
   const handleLogin = async (provider, key) => {
     setError(null);
-    setInProgress(true);
+    setLoading(true);
     const data = await api.auth.socialLogin(provider, key);
-    setInProgress(false);
+    setLoading(false);
     
     if (data.error) {
       setError(data.error);
@@ -59,7 +59,7 @@ const SocialLogin = () => {
 
   return (
     <MainDiv>
-      {inProgress ? <Spin size="large" />
+      {loading ? <Spin size="large" />
       :
         <React.Fragment>
           {error && message.error(error, 10)}
