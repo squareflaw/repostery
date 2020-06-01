@@ -26,9 +26,7 @@ const App = () => {
     setLoading(true);
 
     async function getUser () {
-      let data = await api.user.getUser();
-      let profile = await api.user.getProfile(data.username);
-      data.profile = profile;
+      const data = await api.user.getUser();
       setLoading(false);
   
       if (data.error) return;

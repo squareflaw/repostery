@@ -39,8 +39,10 @@ class TestLoginSerializer:
     Test cases for validating user login
     """
 
+    @pytest.mark.django_db
     def test_should_validate_user_login(self, mocker):
         user = UserFactory.build()
+        user.profile = ProfileFactory.build()
         serializer = LoginSerializer(data={
             'email': user.email,
             'password': user.password,
@@ -64,8 +66,10 @@ class TestGoogleSocialSerializer:
     Test cases for validating google signup with the SocialSerializer
     """
 
+    @pytest.mark.django_db
     def test_should_validate_cretentials_provided(self, mocker):
         user = UserFactory.build(email='test@gmail.com', username='test@gmail.com')
+        user.profile = ProfileFactory.build()
         data = {'provider': 'google', 'access_token': 'valid_token'}
         mock_oauth_response = {
             'email': 'test@gmail.com',
@@ -102,8 +106,10 @@ class TestGithubSocialSerializer:
     Test cases for validating Github signup with the SocialSerializer
     """
 
+    @pytest.mark.django_db
     def test_should_validate_cretentials_provided(self, mocker):
         user = UserFactory.build()
+        user.profile = ProfileFactory.build()
         data = {'provider': 'github', 'access_token': 'valid_token'}
         mock_oauth_response = {
             'email': 'test@mail.com',
@@ -122,8 +128,10 @@ class TestGithubSocialSerializer:
         serializer = SocialSerializer(data=data)
         assert serializer.is_valid()
 
+    @pytest.mark.django_db
     def test_should_validate_with_code_provided(self, mocker):
         user = UserFactory.build()
+        user.profile = ProfileFactory.build()
         data = {'provider': 'github', 'code': 'valid_code'}
         mock_oauth_response = {
             'email': 'test@mail.com',

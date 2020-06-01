@@ -43,9 +43,7 @@ const SocialLogin = () => {
   const handleLogin = async (provider, key) => {
     setError(null);
     setInProgress(true);
-    let data = await api.auth.socialLogin(provider, key)
-    let profile = await api.user.getProfile(data.username);
-    data.profile = profile;
+    const data = await api.auth.socialLogin(provider, key);
     setInProgress(false);
     
     if (data.error) {

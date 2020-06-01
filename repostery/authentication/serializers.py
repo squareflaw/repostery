@@ -83,6 +83,7 @@ class LoginSerializer(serializers.Serializer):
             'email': user.email,
             'username': user.username,
             'token': user.token,
+            'profile': user.profile,
         }
 
 class SocialSerializer(serializers.Serializer):
@@ -96,6 +97,7 @@ class SocialSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
+    profile = ProfileSerializer(read_only=True)
 
     def validate(self, data):
         provider = data.get('provider')
@@ -125,6 +127,7 @@ class SocialSerializer(serializers.Serializer):
             'email': user.email,
             'username': user.username,
             'token': user.token,
+            'profile': user.profile
         }
 
 
@@ -137,10 +140,7 @@ class UserSerializer(serializers.ModelSerializer):
         min_length=8,
         write_only=True
     )
-    # When a field should be handled as a serializer, we must explicitly say
-    # so. Moreover, `UserSerializer` should never expose profile information,
-    # so we set `write_only=True`.
-    profile = ProfileSerializer(write_only=True)
+    profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
