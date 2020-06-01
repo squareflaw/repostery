@@ -2,15 +2,9 @@ import React, { useGlobal, useEffect, useState } from 'reactn';
 import styled from "styled-components";
 import { Spin } from 'antd';
 import SocialLogin from "./SocialLogin/SocialLogin";
+import Spinner from "./Spinner";
 import Home from "./Home";
 import api from '../api'
-
-const Spinner = styled(Spin)`
-  min-height: ${window.innerHeight}px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const App = () => {
   const [user, setUser] = useGlobal('user');
@@ -44,7 +38,7 @@ const App = () => {
     return () => window.removeEventListener("resize", updateWidthAndHeight);
   });
 
-  if (loading) return <Spinner size="large" />
+  if (loading) return <Spinner fullWidth={true} size="large" />
   if (user) return <Home/>
   return <SocialLogin/>
 }

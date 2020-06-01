@@ -8,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 setGlobal({
   user: null,
   responseError: null,
+  searchInput: '',
   height: window.innerHeight,
   width: window.innerWidth
 })

@@ -1,9 +1,11 @@
 import React from 'reactn';
+import styled from 'styled-components'
 import { Tabs as TabsANTD } from 'antd';
 import { HomeOutlined, UserOutlined} from '@ant-design/icons'
-import styled from 'styled-components'
+import TopRepositories from './Repositories/TopRepositories'
 
 const { TabPane } = TabsANTD;
+
 const TabsMainDiv= styled(TabsANTD)`
   width: 100vw;
 
@@ -17,14 +19,13 @@ const TabsMainDiv= styled(TabsANTD)`
 `;
 
 const Tabs = () => (
-  <TabsMainDiv defaultActiveKey="1" size='large' animated={false}>
+  <TabsMainDiv defaultActiveKey="2" size='large' animated={false}>
     <TabPane key="1" tab={
       <span>
         <HomeOutlined />
         Feed
       </span>
     }>
-      here goes the feed
     </TabPane>
     <TabPane key="2" tab={
       <span>
@@ -32,7 +33,7 @@ const Tabs = () => (
         Your Profile
       </span>
     }>
-      Here goes your Profile
+      <TopRepositories username='squareflaw'/>
     </TabPane>
   </TabsMainDiv>
 );

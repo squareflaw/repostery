@@ -1,20 +1,12 @@
-import React from "reactn";
+import React, {useGlobal} from "reactn";
 import styled from 'styled-components'
-import { Input } from 'antd';
-
-const { Search } = Input;
-const SearchBoxStyled = styled(Search)`
-  max-width: 800px;
-  padding: 0 20px;
-
-  input, button {
-    height: 40px;
-  }
-`;
+// import { Input } from 'antd';
+import Autocomplete from '../Autocomplete'
 
 const SearchBox = ({placeholder}) => { 
+  const [searchInput, setSearchInput] = useGlobal('searchInput')
   return (
-    <SearchBoxStyled placeholder={placeholder} onSearch={value => alert(`You search for ${value}`)} enterButton />
+    <Autocomplete placeholder={placeholder} onSearch={value => setSearchInput(value)} enterButton />
   )
 }
 
