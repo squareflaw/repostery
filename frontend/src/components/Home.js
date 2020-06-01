@@ -1,30 +1,6 @@
 import React, { useGlobal} from 'reactn';
-import styled from 'styled-components'
-import { Button as btn } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
+import Nav from "./Nav";
 import api from '../api'
-
-const MainDiv = styled.div`
-  min-height: ${window.innerHeight}px;
-  margin: 0 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content:center;
-  align-items: center;
-`;
-
-const Avatar = styled.img`
-  max-width: 200px;
-  margin: 20px;
-  border-radius: 10px;
-`;
-
-const Button = styled(btn)`
-  border-radius: 10px;
-  &:hover {
-    color: var(--primary-color);
-  }
-`;
 
 export const Home = () => {
   const [user, setUser] = useGlobal('user');
@@ -36,11 +12,9 @@ export const Home = () => {
   }
 
   return (
-    <MainDiv>
-      <Avatar src={user.profile.image}/>
-      <h2>{user.username}</h2>
-      <Button icon={<LogoutOutlined />} onClick={handleLogout}>Log out</Button>
-    </MainDiv>
+    <div>
+      <Nav user={user} logout={handleLogout}/>
+    </div>
   )
 }
 
