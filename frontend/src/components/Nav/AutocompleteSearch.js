@@ -23,7 +23,6 @@ const AutocompleteSearch = () => {
   const onSearch = async searchText => {
     let suggestions = [];
     if (searchText) suggestions = await getUsernameSuggestions(searchText);
-    console.log(suggestions)
     setOptions(suggestions);
   };
 
@@ -34,8 +33,9 @@ const AutocompleteSearch = () => {
   return (
     <AutoComplete
       options={options}
+      defaultActiveFirstOption
       style={{
-        width: 600,
+        width: 700,
       }}
       onSelect={onSelect}
       onSearch={onSearch}

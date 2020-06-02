@@ -15,6 +15,7 @@ const options = () => ({
 export const getStarredReposByUser = async (username) => {
   const response = await fetch(`${API_ROOT}users/${username}/starred`, options());
   let repos = await response.json();
+  if (repos.message) return [];
   repos = repos.map(repo => ({
     name: repo.name,
     full_name: repo.full_name,
