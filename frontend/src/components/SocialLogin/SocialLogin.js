@@ -19,9 +19,6 @@ const MainDiv = styled.div`
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
-    &:hover {
-      color: var(--primary-color);
-    }
 
     .logo {
       width: 20px;
@@ -46,6 +43,7 @@ const SocialLogin = () => {
       setError(data.error);
     } else {
       window.localStorage.setItem('jwt', data.token);
+      window.localStorage.setItem('gh_access_token', data.gh_access_token);
       setGithubAccessToken(data.gh_access_token)
       setUser({...data});
     }
