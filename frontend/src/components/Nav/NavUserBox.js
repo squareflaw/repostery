@@ -33,6 +33,7 @@ const NavUserBox = () => {
   const [user, setUser] = useGlobal('user');
 
   const handleLogout = () => {
+    window.localStorage.setItem('jwt', '');
     api.setToken(null);
     setUser(null);
   }

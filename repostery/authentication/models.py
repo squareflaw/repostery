@@ -53,7 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
         return self.username
 
     def _generate_jwt_token(self):
-        expire_date = datetime.now() + timedelta(days=60)
+        expire_date = datetime.now() + timedelta(hours=1)
 
         token = jwt.encode(
             {

@@ -45,6 +45,7 @@ const SocialLogin = () => {
     if (data.error) {
       setError(data.error);
     } else {
+      window.localStorage.setItem('jwt', data.token);
       setGithubAccessToken(data.gh_access_token)
       setUser({...data});
     }
