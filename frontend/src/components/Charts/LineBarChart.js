@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 import styled from 'styled-components'
 
 const MainDiv = styled.div`
+  max-width: 600px;
   margin: 20px;
   background: var(--full-white);
   border-radius: 5px;
@@ -30,7 +31,6 @@ export const LineBarChart = ({type="line"}) => {
         options={options}
         series={series}
         type={type}
-        width='600'
       />
     </MainDiv>
   );
