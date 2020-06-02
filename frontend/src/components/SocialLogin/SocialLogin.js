@@ -4,7 +4,7 @@ import { Spin, message} from 'antd';
 import GithubSocialButton from './GithubSocialButton'
 import GoogleSocialButton from './GoogleSocialButton'
 import api from '../../api'
-import {setGithubAccessToken} from '../../helpers/githubAPI'
+import {setGithubAccessToken} from '../../github/githubAPI'
 
 const MainDiv = styled.div`
   min-height: ${window.innerHeight}px;

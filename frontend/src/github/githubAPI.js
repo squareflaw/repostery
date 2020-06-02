@@ -41,3 +41,7 @@ export const getUsernameSuggestions = async (query) => {
   const suggestions = results.items.map(user => ({value: user.login, image: user.avatar_url}));
   return suggestions;
 }
+
+export default {
+  getStarredReposByUser
+}

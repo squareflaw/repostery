@@ -1,13 +1,14 @@
 import React from 'reactn';
 import Nav from "./Nav/Nav";
-import Tabs from './Tabs'
+// import Tabs from './Tabs'
+import TopRepositories from './Repositories/TopRepositories';
 
 export const Home = () => {
 
   return (
     <div>
       <Nav />
-      <Tabs />
+      <TopRepositories />
     </div>
   )
 }

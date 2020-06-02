@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { requestGithubAuthentication } from "../../helpers/oauth";
+import { requestGithubAuthentication } from "../../github/oauth";
 import { Button } from 'antd';
 
 const GithubSocialButton = (props) => {

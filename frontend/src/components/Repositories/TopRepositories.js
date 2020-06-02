@@ -2,8 +2,7 @@ import React, { useState, useEffect, useGlobal } from 'reactn';
 import styled from 'styled-components'
 import { Card } from 'antd';
 import Spinner from '../Spinner'
-import { getStarredReposByUser } from '../../helpers/githubAPI'
-import { range } from '../../helpers/utils'
+import { getStarredReposByUser } from '../../github/githubAPI'
 import LineBarChart from '../Charts/LineBarChart';
 
 const MainDiv = styled.div`
@@ -23,7 +22,6 @@ const Grid = styled.div`
   align-items: baseline;
   grid-gap: 20px;
 `;
-
 
 const RepoCard = ({ repo }) => (
   <Card title={repo.name} bordered={false} >
@@ -64,11 +62,11 @@ const TopRepositories = () => {
   } else {
     return (
       <MainDiv>
+        <LineBarChart type='bar'/>
+        <LineBarChart/>
         <Grid>
           {repoItems}
         </Grid>
-        <LineBarChart type='bar'/>
-        <LineBarChart/>
       </MainDiv>
     )
   }
