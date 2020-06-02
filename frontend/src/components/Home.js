@@ -2,10 +2,10 @@ import React, { useState, useEffect, useGlobal } from 'reactn';
 import Spinner from './Spinner'
 import Nav from "./Nav/Nav";
 import Dashboard from './Dashboard';
-import { getStarredReposByUser } from '../github/githubAPI'
-import { formatReposForXY } from '../github/dataSeries'
 import Landing from './Landing/Landing';
 import NotFoundIllustration from './NotFoundIllustration';
+import { getStarredReposByUser } from '../github/githubAPI'
+import { formatReposForXY } from '../github/dataSeries'
 
 export const Home = () => {
 

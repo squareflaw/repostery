@@ -14,7 +14,7 @@ const Dashboard = (props) => {
     <MainDiv>
       <LineChart
         xaxisType='category'
-        seriesName='Open Issues'
+        seriesName='Stars'
         data={props.dataSet}
       />
     </MainDiv>

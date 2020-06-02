@@ -39,7 +39,7 @@ export const LineChart = (props) => {
       <Chart
         options={options}
         series={series}
-        type='line'
+        type='bar'
       />
     </MainDiv>
   );

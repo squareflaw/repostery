@@ -6,7 +6,7 @@ export const NotFoundIllustration = () => {
   return (
     <Result
       status="404"
-      title="It's time to Analize!"
+      title="It's time to Analize! Search a user or click your profile"
       subTitle="Write down an active github username and get data visualizations about their starred repositories"
     />
   )
