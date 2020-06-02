@@ -1,7 +1,7 @@
 import React, { useState, useGlobal } from 'reactn';
 import styled from 'styled-components'
 import { Input, AutoComplete } from 'antd';
-import {getUsernameSuggestions} from '../../helpers/githubAPI'
+import {getUsernameSuggestions} from '../../github/githubAPI'
 
 const SearchBoxStyled = styled(Input.Search)`
   max-width: 800px;
@@ -11,10 +11,6 @@ const SearchBoxStyled = styled(Input.Search)`
     height: 40px;
   }
 `;
-
-const mockVal = (str, repeat = 1) => ({
-  value: str.repeat(repeat),
-});
 
 const AutocompleteSearch = () => {
   const [searchInput, setSearchInput] = useGlobal('searchInput')

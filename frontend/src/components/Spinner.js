@@ -1,4 +1,4 @@
-import React, { useGlobal, useEffect, useState } from 'reactn';
+import React from 'reactn';
 import styled from "styled-components";
 import { Spin } from 'antd';
 
