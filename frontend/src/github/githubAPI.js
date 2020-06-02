@@ -21,15 +21,15 @@ export const getStarredReposByUser = async (username) => {
     full_name: repo.full_name,
     html_url: repo.html_url,
     description: repo.description,
-    created_at: repo.created_at,
-    updated_at: repo.updated_at,
+    created_at: new Date(repo.created_at).toString(),
+    updated_at: new Date(repo.updated_at).toString(),
     size: repo.size,
     language: repo.language,
     owner_avatar_url: repo.owner.avatar_url,
     stargazers_count: repo.stargazers_count,
     forks_count: repo.forks_count,
     open_issues_count: repo.open_issues_count,
-    contributors_url: repo.contributors_url
+    contributors_url: repo.contributors_url,
   }))
   return repos;
 }

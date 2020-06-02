@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useGlobal } from 'reactn'
 import { requestGithubAuthentication } from "../../github/oauth";
 import { Button } from 'antd';
 
 const GithubSocialButton = (props) => {
+  const [width] = useGlobal('width');
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -17,7 +18,7 @@ const GithubSocialButton = (props) => {
   return (
     <Button onClick={requestGithubAuthentication}>
       <img className='logo' src='github.png' alt='github logo' />
-      Sign up with Github
+      {width > 700 && "Sign up with Github"}
     </Button>
   );
 }

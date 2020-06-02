@@ -12,7 +12,7 @@ const SearchBoxStyled = styled(Input.Search)`
   }
 `;
 
-const AutocompleteSearch = () => {
+const AutocompleteSearch = (props) => {
   const [searchInput, setSearchInput] = useGlobal('searchInput')
   const [options, setOptions] = useState([]);
 
@@ -31,7 +31,7 @@ const AutocompleteSearch = () => {
       options={options}
       defaultActiveFirstOption
       style={{
-        width: 700,
+        width: props.width? props.width : 700,
       }}
       onSelect={onSelect}
       onSearch={onSearch}

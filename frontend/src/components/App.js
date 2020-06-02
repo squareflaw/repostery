@@ -1,8 +1,8 @@
 import React, { useGlobal, useEffect, useState } from 'reactn';
-import SocialLogin from "./SocialLogin/SocialLogin";
 import Home from "./Home";
 import api from '../api'
 import Spinner from './Spinner';
+import Landing from './Landing/Landing';
 
 const App = () => {
   const [user, setUser] = useGlobal('user');
@@ -37,8 +37,7 @@ const App = () => {
   });
 
   if (loading) return <Spinner fullHeight/>
-  if (user) return <Home/>
-  return <SocialLogin/>
+  return <Home/>
 }
 
 export default App;

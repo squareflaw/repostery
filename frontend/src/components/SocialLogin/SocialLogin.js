@@ -7,16 +7,14 @@ import api from '../../api'
 import {setGithubAccessToken} from '../../github/githubAPI'
 
 const MainDiv = styled.div`
-  min-height: ${window.innerHeight}px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 
   > button {
     height: auto;
     width: auto;
-    margin: 10px;
     padding: 10px;
     border-radius: 10px;
 
@@ -59,7 +57,7 @@ const SocialLogin = () => {
         <React.Fragment>
           {error && message.error(error, 10)}
           <GithubSocialButton login={handleGithubLogin}/>
-          <GoogleSocialButton login={handleGoogleLogin}/>
+          {/* <GoogleSocialButton login={handleGoogleLogin}/> */}
         </React.Fragment>
       }
     </MainDiv>

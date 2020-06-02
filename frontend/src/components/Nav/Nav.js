@@ -1,5 +1,6 @@
-import React from 'reactn'
+import React, {useGlobal} from 'reactn'
 import styled from 'styled-components'
+import SocialLogin from '../SocialLogin/SocialLogin'
 import NavUserBox from './NavUserBox'
 import AutocompleteSearch from './AutocompleteSearch'
 
@@ -16,11 +17,15 @@ const Logo = styled.img`
 `
 
 const Nav = () => {
+  const [user] = useGlobal('user');
   return (
     <MainDiv>
       <a href='./'><Logo src='pie-logo.svg' alt='App logo' /></a>
       <AutocompleteSearch/>
-      <NavUserBox/>
+      {user
+        ? <NavUserBox/>
+        : <SocialLogin/>
+      }
     </MainDiv>
   )
 };
