@@ -18,7 +18,7 @@ const Logo = styled.img`
 const Nav = () => {
   return (
     <MainDiv>
-      <Logo src='pie-logo.svg' alt='App logo'/>
+      <a href='./'><Logo src='pie-logo.svg' alt='App logo' /></a>
       <AutocompleteSearch/>
       <NavUserBox/>
     </MainDiv>
