@@ -9,6 +9,7 @@ const SearchBoxStyled = styled(Input.Search)`
 
   input, button {
     height: 40px;
+    box-shadow: 3px 3px 3px #aaa;
   }
 `;
 

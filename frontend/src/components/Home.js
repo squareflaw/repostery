@@ -32,7 +32,7 @@ export const Home = () => {
         <Spinner/>
       </>
     )
-  } else if (dataSet.length > 0) {
+  } else if (searchInput && dataSet.length > 0) {
     return (
       <>
         <Nav />

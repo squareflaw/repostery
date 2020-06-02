@@ -11,18 +11,35 @@ const MainDiv = styled.div`
   align-items: center;
 `;
 
-const Avatar = styled.img`
+const Avatar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  p {
+    margin: 0;
+    margin-right: 20px;
+    color: var(--light-black);
+    font-weight: lighter;
+  }
+`;
+
+
+const AvatarImage = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 10px;
-  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px #aaa;
 `
 
 const Button = styled(btn)`
   width: 40px;
   height: 40px;
   margin-left: 20px;
-  border-radius: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px #aaa;
   &:hover {
     color: var(--primary-color);
     cursor: pointer;
@@ -39,6 +56,7 @@ const NavUserBox = () => {
   const handleLogout = () => {
     window.localStorage.setItem('jwt', '');
     api.setToken(null);
+    setSearchInput('');
     setUser(null);
   }
 
@@ -64,15 +82,18 @@ const NavUserBox = () => {
     return (
       <MainDiv>
         <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-          <Avatar src={user.profile.image} wWidth={width} />
+          <AvatarImage src={user.profile.image} wWidth={width} />
         </Dropdown>
       </MainDiv>
     )
   } else {
     return (
       <MainDiv>
-        <Popover placement="bottomRight" content={`Click to search your profile ${user.username}`}>
-          <Avatar src={user.profile.image} wWidth={width} onClick={searchProfile} />
+        <Popover placement="bottomRight" content={`Click to search your profile`}>
+          <Avatar onClick={searchProfile} >
+            <p>{user.username}</p>
+            <AvatarImage src={user.profile.image} wWidth={width} />
+          </Avatar>
         </Popover>
         <Popover placement="bottomRight" content='Log out'>
           <Button onClick={() => showLogoutConfirm(handleLogout)}>
