@@ -51,6 +51,7 @@ class OauthTokenConverter:
             'email': email,
             'username': data.get('login'),
             'image': data.get('avatar_url'),
+            'gh_access_token': access_token,
         }
         return user_info
 

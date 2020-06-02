@@ -34,7 +34,6 @@ const NavUserBox = () => {
 
   const handleLogout = () => {
     api.setToken(null);
-    window.localStorage.setItem('jwt', '');
     setUser(null);
   }
 

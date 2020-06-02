@@ -8,7 +8,6 @@ const options = (method='GET', data={}) => ({
   method: method,
   mode: 'cors',
   cache: 'no-cache',
-  credentials: 'same-origin',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': token? `Token ${token}`: ''

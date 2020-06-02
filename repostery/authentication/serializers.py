@@ -97,6 +97,7 @@ class SocialSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
+    gh_access_token = serializers.CharField(max_length=255, read_only=True)
     profile = ProfileSerializer(read_only=True)
 
     def validate(self, data):
@@ -127,7 +128,8 @@ class SocialSerializer(serializers.Serializer):
             'email': user.email,
             'username': user.username,
             'token': user.token,
-            'profile': user.profile
+            'profile': user.profile,
+            'gh_access_token': user_info.get('gh_access_token', ''),
         }
 
 

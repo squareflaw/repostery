@@ -4,6 +4,7 @@ import { Spin, message} from 'antd';
 import GithubSocialButton from './GithubSocialButton'
 import GoogleSocialButton from './GoogleSocialButton'
 import api from '../../api'
+import {setGithubAccessToken} from '../../helpers/githubAPI'
 
 const MainDiv = styled.div`
   min-height: ${window.innerHeight}px;
@@ -44,7 +45,7 @@ const SocialLogin = () => {
     if (data.error) {
       setError(data.error);
     } else {
-      window.localStorage.setItem('jwt', data.token);
+      setGithubAccessToken(data.gh_access_token)
       setUser({...data});
     }
   }
