@@ -7,8 +7,11 @@ const MainDiv = styled.div`
   min-height: 150px;
   padding: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  font-size: .7rem;
   background: var(--full-white);
+  box-shadow: 3px 3px 3px #888;
 
   @media (max-width: 600px){
     width: 150px;
@@ -23,7 +26,9 @@ const MainDiv = styled.div`
 const Stat = ({title, value}) => {
   return (
     <MainDiv>
-      <Statistic title={title} value={value} />
+      <p>{title}</p>
+      <h5>{value}</h5>
+      {/* <Statistic title={title} value={value} decimalSeparator=''/> */}
     </MainDiv>
   )
 }

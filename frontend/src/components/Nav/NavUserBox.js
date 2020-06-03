@@ -68,10 +68,20 @@ const NavUserBox = () => {
       fontSize: '1.2rem' 
     }}>
       <Menu.ItemGroup title={user.username}>
-        <Menu.Item key="1" onClick={searchProfile} icon={<UserOutlined />}>
+        <Menu.Item 
+          key="1" 
+          onClick={searchProfile} 
+          icon={<UserOutlined />} 
+          style={{fontSize: '1rem'}}
+        >
           See your profile
         </Menu.Item>
-        <Menu.Item key="2" onClick={() => showLogoutConfirm(handleLogout)} icon={<LogoutOutlined />}>
+        <Menu.Item 
+          key="2" 
+          onClick={() => showLogoutConfirm(handleLogout)} 
+          icon={<LogoutOutlined />} 
+          style={{fontSize: '1rem'}}
+          >
           Log out
         </Menu.Item>
       </Menu.ItemGroup>

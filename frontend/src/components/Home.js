@@ -21,7 +21,7 @@ export const Home = () => {
       setLoading(true);
       const profile = await githubAPI.getUser(searchInput);
       const repos = await githubAPI.getStarredReposByUser(searchInput);
-      if (repos.length < 1) return;
+      if (repos.length < 1) return setLoading(false);
       const dataset = getDashboardDataset(repos);
       setStarsCount(repos.length);
       setDataSet(dataset);

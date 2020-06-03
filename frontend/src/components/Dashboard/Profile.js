@@ -10,7 +10,7 @@ const MainDiv = styled.div`
   padding-bottom: 0;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 `;
 
@@ -23,6 +23,11 @@ const Avatar = styled.a`
   font-size: 1.2rem;
   color: var(--full-black);
   cursor: pointer;
+
+  @media (max-width: 700px) { 
+    width: 100%;
+  }
+
   :hover {
     color: var(--full-black);
   }
@@ -44,7 +49,7 @@ const Profile = ({profile, starsCount}) => {
           <p>{profile.login}</p>
         </Avatar>
       </Tooltip>
-      <Stat title="Starred Repositories 🌟" value={starsCount} />
+      <Stat title="On Github since 🌟" value={profile.created_at.slice(0,4)} />
       <Stat title="Public Repositories 📚" value={profile.public_repos} />
     </MainDiv>
   )

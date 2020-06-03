@@ -5,7 +5,9 @@
 export const getDashboardDataset = (repos) => {
   return {
     reposForBars: formatReposForXY(repos, 'name', 'open_issues_count'),
-    languagesDonut: getReposCountByLanguages(repos)
+    languagesDonut: getReposCountByLanguages(repos),
+    timelineData: getTimelineDataSet(repos),
+    bubbleChartData: getBubbleChartDataSet(repos),
   }
 }
 
@@ -43,4 +45,39 @@ const getReposCountByLanguages = (repos) => {
     series: reposCount,
     labels: languages
   }
+}
+
+const getTimelineDataSet = (repos, order='created_at') => {
+  const dataset = repos.map(repo => {
+    return {
+      name: repo.name,
+      data: [{
+        x: repo.language,
+        y: [
+          new Date(repo[order]).getTime(),
+          Date.now()
+        ],
+      }]
+    }
+  })
+  return dataset
+}
+
+const getBubbleChartDataSet = (repos, order='created_at') => {
+  let reposByLanguage = {};
+  repos.forEach((repo) => {
+    if (!repo.language) repo.language = 'Others';
+    if (repo.language in reposByLanguage) {
+      reposByLanguage[repo.language].push(repo);
+    } else {
+      reposByLanguage[repo.language] = [repo];
+    }
+  });
+  const dataset = Object.keys(reposByLanguage).map(language => {
+    return {
+      name: language,
+      data: reposByLanguage[language].map(repo => [repo.updated_at])
+    }
+  })
+  return dataset
 }

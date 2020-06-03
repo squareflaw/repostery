@@ -55,7 +55,7 @@ export const requests = {
   }
 }
 
-const fetchWithTimeout = (url, options, timeout = 15000) => {
+export const fetchWithTimeout = (url, options, timeout = 15000) => {
   return Promise.race([
     fetch(url, options),
     new Promise((_, reject) =>
@@ -64,7 +64,7 @@ const fetchWithTimeout = (url, options, timeout = 15000) => {
   ]);
 }
 
-const handleResponse = async (response) => {
+export const handleResponse = async (response) => {
   const data = await response.json();
   if (response.status >= 200 && response.status <= 299) {
     return data

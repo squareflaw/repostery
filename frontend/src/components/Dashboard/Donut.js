@@ -6,15 +6,15 @@ import CharTitle from './CharTitle';
 const MainDiv = styled.div`
   width: 100vw;
   max-width: 500px;
+  min-width: 300px;
   margin: 20px 0;
-  padding: 10px;
   border-radius: 5px;
   @media (min-width: 700px) {
     margin: 20px;
   }
 `;
 
-const Donut = ({data}) => {
+const Donut = ({data, title}) => {
   const [state, setState] = useState({
     options: { 
       labels: data.labels,
@@ -24,7 +24,7 @@ const Donut = ({data}) => {
 
   return (
     <MainDiv>
-      <CharTitle title='Stars by Language 🌟🎨'/>
+      {title && <CharTitle title={title}/>}
       <Chart 
         options={state.options} 
         series={state.series}
