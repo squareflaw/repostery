@@ -30,14 +30,13 @@ const AutocompleteSearch = (props) => {
   return (
     <AutoComplete
       options={options}
-      defaultActiveFirstOption
       style={{
         width: props.width? props.width : 700,
       }}
       onSelect={onSelect}
       onSearch={onSearch}
     >
-      <SearchBoxStyled size="large" placeholder="Search Github user" enterButton />
+      <SearchBoxStyled size="large" placeholder="Search Github user" onSearch={value => onSelect(value)} enterButton />
     </AutoComplete>
   );
 };
