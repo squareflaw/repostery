@@ -1,6 +1,6 @@
 import React, { useGlobal } from 'reactn'
 import styled from 'styled-components'
-import { Popover, Menu, Dropdown, Button as btn } from 'antd'
+import { Tooltip, Menu, Dropdown, Button as btn } from 'antd'
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { showLogoutConfirm } from "../Modals"
 import api from '../../api'
@@ -89,17 +89,17 @@ const NavUserBox = () => {
   } else {
     return (
       <MainDiv>
-        <Popover placement="bottomRight" content={`Click to search your profile`}>
+        <Tooltip placement="bottomRight" title={`Click to search your profile`}>
           <Avatar onClick={searchProfile} >
             <p>{user.username}</p>
             <AvatarImage src={user.profile.image} wWidth={width} />
           </Avatar>
-        </Popover>
-        <Popover placement="bottomRight" content='Log out'>
+        </Tooltip>
+        <Tooltip placement="bottomRight" title='Log out'>
           <Button onClick={() => showLogoutConfirm(handleLogout)}>
             <LogoutOutlined />
           </Button>
-        </Popover>
+        </Tooltip>
       </MainDiv>
     )
   }

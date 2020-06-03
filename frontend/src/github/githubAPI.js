@@ -16,22 +16,14 @@ export const getStarredReposByUser = async (username) => {
   const response = await fetch(`${API_ROOT}users/${username}/starred`, options());
   let repos = await response.json();
   if (repos.message) return [];
-  repos = repos.map(repo => ({
-    name: repo.name,
-    full_name: repo.full_name,
-    html_url: repo.html_url,
-    description: repo.description,
-    created_at: new Date(repo.created_at).toString(),
-    updated_at: new Date(repo.updated_at).toString(),
-    size: repo.size,
-    language: repo.language,
-    owner_avatar_url: repo.owner.avatar_url,
-    stargazers_count: repo.stargazers_count,
-    forks_count: repo.forks_count,
-    open_issues_count: repo.open_issues_count,
-    contributors_url: repo.contributors_url,
-  }))
   return repos;
+}
+
+export const getUser = async (username) => {
+  const response = await fetch(`${API_ROOT}users/${username}`, options());
+  let user = await response.json();
+  if (user.message) return null;
+  return user;
 }
 
 export const getUsernameSuggestions = async (query) => {
@@ -43,5 +35,6 @@ export const getUsernameSuggestions = async (query) => {
 }
 
 export default {
-  getStarredReposByUser
+  getStarredReposByUser,
+  getUser
 }

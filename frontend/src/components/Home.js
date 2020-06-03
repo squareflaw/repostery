@@ -1,28 +1,34 @@
 import React, { useState, useEffect, useGlobal } from 'reactn';
 import Spinner from './Spinner'
 import Nav from "./Nav/Nav";
-import Dashboard from './Dashboard';
+import Dashboard from './Dashboard/Dashboard';
 import Landing from './Landing/Landing';
 import NotFoundIllustration from './NotFoundIllustration';
-import { getStarredReposByUser } from '../github/githubAPI'
-import { formatReposForXY } from '../github/dataSeries'
+import githubAPI from '../github/githubAPI'
+import { getDashboardDataset } from '../github/dataSeries'
 
 export const Home = () => {
 
   const [searchInput] = useGlobal('searchInput')
   const [user] = useGlobal('user')
-  const [dataSet, setDataSet] = useState([])
+  const [dataSet, setDataSet] = useState(null)
+  const [starsCount, setStarsCount] = useState(0)
+  const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    async function fetchRepos() {
+    async function fetchDataset() {
       setLoading(true);
-      let repos = await getStarredReposByUser(searchInput);
-      repos = formatReposForXY(repos, 'name', 'stargazers_count').slice(0, 10)
-      setDataSet(repos);
+      const profile = await githubAPI.getUser(searchInput);
+      const repos = await githubAPI.getStarredReposByUser(searchInput);
+      if (repos.length < 1) return;
+      const dataset = getDashboardDataset(repos);
+      setStarsCount(repos.length);
+      setDataSet(dataset);
+      setProfile(profile);
       setLoading(false);
     }
-    if (searchInput) fetchRepos();
+    if (searchInput) fetchDataset();
   }, [searchInput])
 
   if (loading) {
@@ -32,11 +38,11 @@ export const Home = () => {
         <Spinner/>
       </>
     )
-  } else if (searchInput && dataSet.length > 0) {
+  } else if (searchInput && dataSet) {
     return (
       <>
         <Nav />
-        <Dashboard dataSet={dataSet} />
+        <Dashboard dataSet={dataSet} profile={profile} starsCount={starsCount}/>
       </>
     )
   }else if (user) {
