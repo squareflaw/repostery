@@ -12,18 +12,18 @@ const options = () => ({
   }
 })
 
-export const getStarredReposByUser = async (username) => {
-  const response = await fetch(`${API_ROOT}users/${username}/starred`, options());
-  let repos = await response.json();
-  if (repos.message) return [];
-  return repos;
-}
-
 export const getUser = async (username) => {
   const response = await fetch(`${API_ROOT}users/${username}`, options());
   let user = await response.json();
   if (user.message) return null;
   return user;
+}
+
+export const getStarredReposByUser = async (username) => {
+  const response = await fetch(`${API_ROOT}users/${username}/starred`, options());
+  let repos = await response.json();
+  if (repos.message) return [];
+  return repos;
 }
 
 export const getUsernameSuggestions = async (query) => {
@@ -35,6 +35,7 @@ export const getUsernameSuggestions = async (query) => {
 }
 
 export default {
+  getUser,
   getStarredReposByUser,
-  getUser
+  getUsernameSuggestions
 }

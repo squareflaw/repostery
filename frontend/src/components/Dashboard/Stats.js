@@ -1,5 +1,4 @@
 import React from 'reactn'
-import { Statistic } from 'antd';
 import styled from "styled-components";
 
 const MainDiv = styled.div`
@@ -28,7 +27,6 @@ const Stat = ({title, value}) => {
     <MainDiv>
       <p>{title}</p>
       <h5>{value}</h5>
-      {/* <Statistic title={title} value={value} decimalSeparator=''/> */}
     </MainDiv>
   )
 }

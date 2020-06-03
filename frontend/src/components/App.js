@@ -2,7 +2,6 @@ import React, { useGlobal, useEffect, useState } from 'reactn';
 import Home from "./Home";
 import api from '../api'
 import Spinner from './Spinner';
-import Landing from './Landing/Landing';
 
 const App = () => {
   const [user, setUser] = useGlobal('user');

@@ -20,9 +20,8 @@ const Title = styled.p`
 const BodyText = styled.p`
   font-size: 1rem;
   font-weight: lighter;
-  color: var(--light-black)
+  color: var(--light-black);
 `;
-
 
 const Landing = () => {
   return (

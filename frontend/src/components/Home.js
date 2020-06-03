@@ -8,7 +8,6 @@ import githubAPI from '../github/githubAPI'
 import { getDashboardDataset } from '../github/dataSeries'
 
 export const Home = () => {
-
   const [searchInput] = useGlobal('searchInput')
   const [user] = useGlobal('user')
   const [dataSet, setDataSet] = useState(null)
@@ -16,6 +15,7 @@ export const Home = () => {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  // Runs on every user search
   useEffect(() => {
     async function fetchDataset() {
       setLoading(true);
